@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   format,
   parseISO,
@@ -17,10 +17,9 @@ import {
 import { pl } from "date-fns/locale";
 import type { MergedEvent } from "@/app/api/calendar/events/route";
 import type { EventInitialRange } from "@/components/EventDialog";
-import type { DailyForecast } from "@/app/api/weather/forecast/route";
 import { weatherIcon } from "@/lib/weatherIcon";
 import { getHolidayForDate } from "@/lib/polishHolidays";
-import { getDeviceLocation } from "@/lib/deviceLocation";
+import { useForecastByDate, forecastKey } from "@/lib/useForecast";
 
 const WEEKDAY_LABELS = ["Pn", "Wt", "Śr", "Cz", "Pt", "Sb", "Nd"];
 const MAX_VISIBLE_PER_DAY = 3;
@@ -47,21 +46,7 @@ export default function MonthView({
   );
   const draggingRef = useRef(false);
 
-  const [forecast, setForecast] = useState<Record<string, DailyForecast>>({});
-
-  useEffect(() => {
-    const location = getDeviceLocation();
-    const params = location ? `?lat=${location.lat}&lon=${location.lon}` : "";
-    fetch(`/api/weather/forecast${params}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: { forecast: DailyForecast[] } | null) => {
-        if (!data) return;
-        const byDate: Record<string, DailyForecast> = {};
-        for (const day of data.forecast) byDate[day.date] = day;
-        setForecast(byDate);
-      })
-      .catch(() => {});
-  }, []);
+  const forecast = useForecastByDate();
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
@@ -115,7 +100,7 @@ export default function MonthView({
             dragRange &&
             dayIndex >= Math.min(dragRange.startIndex, dragRange.endIndex) &&
             dayIndex <= Math.max(dragRange.startIndex, dragRange.endIndex);
-          const dateKey = format(day, "yyyy-MM-dd");
+          const dateKey = forecastKey(day);
           const holiday = getHolidayForDate(dateKey);
           const dayForecast = forecast[dateKey];
 
@@ -152,10 +137,12 @@ export default function MonthView({
                 </span>
                 {dayForecast && (
                   <span
-                    className="pr-1 text-[10px] text-foreground/50"
-                    title={`${Math.round(dayForecast.tempMinC)}° / ${Math.round(dayForecast.tempMaxC)}°`}
+                    className="flex items-center gap-1 pr-1 text-sm font-medium text-foreground/70"
+                    title={`Min ${Math.round(dayForecast.tempMinC)}° / Maks ${Math.round(dayForecast.tempMaxC)}°`}
                   >
-                    {weatherIcon(dayForecast.weatherCode)}{" "}
+                    <span className="text-base leading-none">
+                      {weatherIcon(dayForecast.weatherCode)}
+                    </span>
                     {Math.round(dayForecast.tempMaxC)}°
                   </span>
                 )}

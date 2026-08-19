@@ -15,6 +15,8 @@ import { pl } from "date-fns/locale";
 import type { MergedEvent } from "@/app/api/calendar/events/route";
 import type { EventInitialRange } from "@/components/EventDialog";
 import { useTimeGridSelection } from "@/lib/useTimeGridSelection";
+import { useForecastByDate, forecastKey } from "@/lib/useForecast";
+import { weatherIcon } from "@/lib/weatherIcon";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const HOUR_HEIGHT_PX = 64;
@@ -71,28 +73,39 @@ export default function WeekView({
 
   const nowOffsetPx = ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT_PX;
 
+  const forecast = useForecastByDate();
+
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
       <div className="mb-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px">
         <div />
-        {days.map((day) => (
-          <button
-            key={day.toISOString()}
-            onClick={() => onSelectDay(day)}
-            className="flex flex-col items-center rounded-lg py-1 hover:bg-surface-muted"
-          >
-            <span className="text-xs font-medium text-foreground/40 capitalize">
-              {format(day, "EEE", { locale: pl })}
-            </span>
-            <span
-              className={`mt-0.5 flex h-7 w-7 items-center justify-center rounded-full text-sm ${
-                isToday(day) ? "bg-accent-coral font-semibold text-white" : "text-foreground"
-              }`}
+        {days.map((day) => {
+          const dayForecast = forecast[forecastKey(day)];
+          return (
+            <button
+              key={day.toISOString()}
+              onClick={() => onSelectDay(day)}
+              className="flex flex-col items-center gap-0.5 rounded-lg py-1 hover:bg-surface-muted"
             >
-              {format(day, "d")}
-            </span>
-          </button>
-        ))}
+              <span className="text-xs font-medium text-foreground/40 capitalize">
+                {format(day, "EEE", { locale: pl })}
+              </span>
+              <span
+                className={`flex h-7 w-7 items-center justify-center rounded-full text-sm ${
+                  isToday(day) ? "bg-accent-coral font-semibold text-white" : "text-foreground"
+                }`}
+              >
+                {format(day, "d")}
+              </span>
+              {dayForecast && (
+                <span className="flex items-center gap-0.5 text-xs text-foreground/60">
+                  <span className="leading-none">{weatherIcon(dayForecast.weatherCode)}</span>
+                  {Math.round(dayForecast.tempMaxC)}°
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {days.some((day) =>

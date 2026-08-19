@@ -6,6 +6,8 @@ import { pl } from "date-fns/locale";
 import type { MergedEvent } from "@/app/api/calendar/events/route";
 import type { EventInitialRange } from "@/components/EventDialog";
 import { useTimeGridSelection } from "@/lib/useTimeGridSelection";
+import { useForecastByDate, forecastKey } from "@/lib/useForecast";
+import { weatherIcon } from "@/lib/weatherIcon";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const HOUR_HEIGHT_PX = 64;
@@ -65,11 +67,24 @@ export default function DayView({
 
   const nowOffsetPx = ((now.getHours() * 60 + now.getMinutes()) / 60) * HOUR_HEIGHT_PX;
 
+  const forecast = useForecastByDate();
+  const dayForecast = forecast[forecastKey(date)];
+
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
-      <h2 className="mb-2 shrink-0 text-lg font-semibold capitalize text-foreground">
-        {format(date, "EEEE, d MMMM yyyy", { locale: pl })}
-      </h2>
+      <div className="mb-2 flex shrink-0 items-center justify-between">
+        <h2 className="text-lg font-semibold capitalize text-foreground">
+          {format(date, "EEEE, d MMMM yyyy", { locale: pl })}
+        </h2>
+        {dayForecast && (
+          <span className="flex items-center gap-2 rounded-full bg-surface-muted px-3 py-1.5 text-base font-medium text-foreground/70">
+            <span className="text-xl leading-none">
+              {weatherIcon(dayForecast.weatherCode)}
+            </span>
+            {Math.round(dayForecast.tempMaxC)}° / {Math.round(dayForecast.tempMinC)}°
+          </span>
+        )}
+      </div>
 
       {allDayEvents.length > 0 && (
         <ul className="mb-2 flex shrink-0 flex-col gap-1">
