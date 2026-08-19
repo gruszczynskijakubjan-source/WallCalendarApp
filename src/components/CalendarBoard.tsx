@@ -21,6 +21,7 @@ import {
   HOLIDAYS_ACCOUNT_ID,
   HOLIDAYS_ACCOUNT_COLOR,
 } from "@/lib/polishHolidays";
+import { THEMES, type Theme } from "@/lib/theme";
 
 type Account = {
   id: string;
@@ -38,6 +39,74 @@ const VIEWS: { id: CalendarView; label: string }[] = [
 
 const DEFAULT_VIEW: CalendarView = "month";
 
+const TITLE_EMOJI: Partial<Record<Theme, string>> = {
+  valentines: "❤️",
+  easter: "🐰",
+};
+
+const FIREWORK_SPARKS = [
+  { angle: 0, color: "var(--accent-gold)" },
+  { angle: 40, color: "var(--accent-coral)" },
+  { angle: 80, color: "var(--accent-teal)" },
+  { angle: 120, color: "var(--accent-plum)" },
+  { angle: 160, color: "var(--accent-gold)" },
+  { angle: 200, color: "var(--accent-coral)" },
+  { angle: 240, color: "var(--accent-teal)" },
+  { angle: 280, color: "var(--accent-plum)" },
+  { angle: 320, color: "var(--accent-gold)" },
+];
+
+// A rocket streaks up (0-30% of the cycle), bursts into radiating sparks that
+// fly outward and fall with gravity (30-85%), then everything resets for the
+// next launch — a continuous animated firework rather than a static glyph.
+function FireworkIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="inline h-7 w-7 align-[-6px] overflow-visible" aria-hidden>
+      <style>{`
+        @keyframes firework-icon-rocket {
+          0% { opacity: 0; transform: translateY(0); }
+          3% { opacity: 1; }
+          28% { opacity: 1; transform: translateY(-9px); }
+          32% { opacity: 0; transform: translateY(-9px); }
+          100% { opacity: 0; transform: translateY(-9px); }
+        }
+        @keyframes firework-icon-spark {
+          0%, 28% { opacity: 0; transform: translate(0, -9px) scale(0.4); }
+          34% { opacity: 1; transform: translate(var(--sx), calc(-9px + var(--sy))) scale(1); }
+          85% { opacity: 0; transform: translate(calc(var(--sx) * 1.5), calc(-9px + var(--sy) * 1.5 + 5px)) scale(0.5); }
+          100% { opacity: 0; }
+        }
+      `}</style>
+      <circle
+        cx="12"
+        cy="21"
+        r="1.1"
+        fill="var(--accent-gold)"
+        style={{ animation: "firework-icon-rocket 2.6s ease-out infinite" }}
+      />
+      {FIREWORK_SPARKS.map((spark) => {
+        const rad = (spark.angle * Math.PI) / 180;
+        const sx = Math.cos(rad) * 7;
+        const sy = Math.sin(rad) * 7;
+        return (
+          <circle
+            key={spark.angle}
+            cx="12"
+            cy="21"
+            r="1"
+            fill={spark.color}
+            style={{
+              animation: "firework-icon-spark 2.6s ease-out infinite",
+              ["--sx" as string]: `${sx}px`,
+              ["--sy" as string]: `${sy}px`,
+            }}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
 export default function CalendarBoard() {
   const [view, setView] = useState<CalendarView>(DEFAULT_VIEW);
   const [cursorDate, setCursorDate] = useState(() => new Date());
@@ -54,6 +123,19 @@ export default function CalendarBoard() {
   const [timerOpen, setTimerOpen] = useState(false);
   const [slideshowOpen, setSlideshowOpen] = useState(false);
   const [devicesOpen, setDevicesOpen] = useState(false);
+  const [theme, setTheme] = useState<Theme | null>(null);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    function sync() {
+      const current = root.getAttribute("data-theme");
+      setTheme((THEMES as readonly string[]).includes(current ?? "") ? (current as Theme) : null);
+    }
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => observer.disconnect();
+  }, []);
 
   const { start, end } = useMemo(
     () => getRangeForView(view, cursorDate),
@@ -174,7 +256,16 @@ export default function CalendarBoard() {
         </button>
         <div className="flex h-full items-center justify-center rounded-2xl border border-border bg-surface px-4 py-2.5 shadow-sm">
           <h1 className="text-lg font-semibold whitespace-nowrap sm:text-xl">
-            Kalendarz Gruszków 🍐
+            Kalendarz Gruszków{" "}
+            <span
+              className={
+                theme === "valentines"
+                  ? "inline-block animate-[heartbeat_1.6s_ease-in-out_infinite]"
+                  : "inline-block"
+              }
+            >
+              {theme === "newyear" ? <FireworkIcon /> : ((theme && TITLE_EMOJI[theme]) ?? "🍐")}
+            </span>
           </h1>
         </div>
         <div className="min-w-0 flex-1">

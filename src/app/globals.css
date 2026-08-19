@@ -61,6 +61,81 @@
   --accent-plum: #c26b8f;
 }
 
+/* Christmas — cool icy blues and silver, with red/gold accents. */
+:root[data-theme="christmas"] {
+  --background: #eef3f7;
+  --foreground: #223040;
+
+  --surface: #ffffff;
+  --surface-muted: #e1eaf1;
+  --border: #c9d9e5;
+
+  --accent-coral: #c23b3b;
+  --accent-teal: #2f7fa6;
+  --accent-gold: #d4a017;
+  --accent-plum: #5a4a7a;
+}
+
+/* New Year's Eve — near-black with gold sparkle. */
+:root[data-theme="newyear"] {
+  --background: #0a0a0d;
+  --foreground: #f3f2ec;
+
+  --surface: #131316;
+  --surface-muted: #1c1c21;
+  --border: #2e2e35;
+
+  --accent-coral: #ff6f61;
+  --accent-teal: #4fd1c5;
+  --accent-gold: #f5c542;
+  --accent-plum: #b98ee0;
+}
+
+/* Valentine's — soft blush pinks and reds. */
+:root[data-theme="valentines"] {
+  --background: #fdf1f2;
+  --foreground: #4a2530;
+
+  --surface: #ffffff;
+  --surface-muted: #fbe1e6;
+  --border: #f3c6ce;
+
+  --accent-coral: #e0455f;
+  --accent-teal: #4f9c94;
+  --accent-gold: #e2a13a;
+  --accent-plum: #b4547e;
+}
+
+/* Easter — pastel spring egg colours. */
+:root[data-theme="easter"] {
+  --background: #f8f7ec;
+  --foreground: #3a3a2c;
+
+  --surface: #ffffff;
+  --surface-muted: #eef0d6;
+  --border: #dfe3b8;
+
+  --accent-coral: #f0937f;
+  --accent-teal: #79b6a0;
+  --accent-gold: #e8c85a;
+  --accent-plum: #b48ad1;
+}
+
+/* Majówka — bright red-and-white with fresh green (Polish flag long weekend). */
+:root[data-theme="mayday"] {
+  --background: #f5faf3;
+  --foreground: #2f3a2a;
+
+  --surface: #ffffff;
+  --surface-muted: #e5f2df;
+  --border: #cbe4c1;
+
+  --accent-coral: #dc2626;
+  --accent-teal: #3f9c67;
+  --accent-gold: #e0b429;
+  --accent-plum: #8a6bab;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -82,4 +157,68 @@ body {
   transition:
     background-color 0.3s,
     color 0.3s;
+}
+
+/* Subtle per-theme background flavour — a soft radial glow so each theme
+   feels distinct even before any particle animation kicks in. */
+:root[data-theme="winter"] body {
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent-teal) 10%, transparent), transparent 55%),
+    var(--background);
+}
+:root[data-theme="autumn"] body {
+  background:
+    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-gold) 12%, transparent), transparent 55%),
+    var(--background);
+}
+:root[data-theme="spring"] body {
+  background:
+    radial-gradient(circle at 15% 100%, color-mix(in srgb, var(--accent-plum) 10%, transparent), transparent 55%),
+    var(--background);
+}
+:root[data-theme="summer"] body {
+  background:
+    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-gold) 16%, transparent), transparent 60%),
+    var(--background);
+}
+:root[data-theme="christmas"] body {
+  background:
+    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--accent-teal) 12%, transparent), transparent 50%),
+    radial-gradient(circle at 90% 100%, color-mix(in srgb, var(--accent-coral) 8%, transparent), transparent 50%),
+    var(--background);
+}
+:root[data-theme="newyear"] body {
+  background:
+    radial-gradient(1px 1px at 10% 20%, #ffffff88, transparent),
+    radial-gradient(1px 1px at 30% 70%, #ffffff66, transparent),
+    radial-gradient(1px 1px at 55% 15%, #ffffff77, transparent),
+    radial-gradient(1px 1px at 70% 55%, #ffffff55, transparent),
+    radial-gradient(1px 1px at 90% 30%, #ffffff88, transparent),
+    radial-gradient(1px 1px at 45% 90%, #ffffff44, transparent),
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-gold) 14%, transparent), transparent 60%),
+    var(--background);
+}
+:root[data-theme="valentines"] body {
+  background:
+    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--accent-coral) 14%, transparent), transparent 55%),
+    var(--background);
+}
+:root[data-theme="easter"] body {
+  background:
+    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-teal) 10%, transparent), transparent 55%),
+    var(--background);
+}
+:root[data-theme="mayday"] body {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent-coral) 6%, transparent) 0%, transparent 12%),
+    var(--background);
+}
+
+
+@keyframes heartbeat {
+  0%, 100% { scale: 1; }
+  15% { scale: 1.08; }
+  30% { scale: 1; }
+  45% { scale: 1.08; }
+  60% { scale: 1; }
 }

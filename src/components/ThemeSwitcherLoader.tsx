@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getStoredTheme, type Theme } from "@/lib/theme";
+import { getStoredTheme, isAutoThemeEnabled, type Theme } from "@/lib/theme";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 /**
@@ -11,11 +11,13 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
  */
 export default function ThemeSwitcherLoader() {
   const [initialTheme, setInitialTheme] = useState<Theme>("autumn");
+  const [initialAuto, setInitialAuto] = useState(true);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialTheme(getStoredTheme());
+    setInitialAuto(isAutoThemeEnabled());
   }, []);
 
-  return <ThemeSwitcher initialTheme={initialTheme} />;
+  return <ThemeSwitcher initialTheme={initialTheme} initialAuto={initialAuto} />;
 }

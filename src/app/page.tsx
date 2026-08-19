@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <ScaledViewport>
       {(portrait) => (
-        <main className="flex h-full w-full flex-col gap-3 bg-background p-4">
+        <main className="flex h-full w-full flex-col gap-3 p-4">
           <EventReminders />
           <div
             className="grid min-h-0 flex-1 gap-3"

@@ -52,7 +52,7 @@ export default function ScaledViewport({
   return (
     <div
       ref={outerRef}
-      className="h-screen w-screen overflow-hidden bg-background"
+      className="h-screen w-screen overflow-hidden"
       style={{
         display: "flex",
         alignItems: "center",
