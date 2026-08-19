@@ -96,3 +96,17 @@ model TrelloConnection {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Single, app-wide eWeLink (Sonoff) connection powering the smart-home
+// device panel. Expected to have at most one row. `region` is the eWeLink
+// API region prefix (e.g. "eu", "us", "as") returned at OAuth time — API
+// calls must be routed to the matching regional host.
+model EweLinkConnection {
+  id           String   @id @default(cuid())
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  region       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

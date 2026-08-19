@@ -23,6 +23,7 @@ export default function AccountSidebar({
   onToggleAccount,
   onOpenSlideshow,
   onOpenTimer,
+  onOpenDevices,
 }: {
   open: boolean;
   onClose: () => void;
@@ -31,6 +32,7 @@ export default function AccountSidebar({
   onToggleAccount: (accountId: string) => void;
   onOpenSlideshow: () => void;
   onOpenTimer: () => void;
+  onOpenDevices: () => void;
 }) {
   return (
     <>
@@ -160,6 +162,28 @@ export default function AccountSidebar({
               <path d="M10 2h4M12 2v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
             Timer kuchenny
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onOpenDevices();
+            }}
+            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
+              <path
+                d="M4 12h16M4 12a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2M4 12a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx="7" cy="8" r="1" fill="currentColor" />
+              <circle cx="7" cy="16" r="1" fill="currentColor" />
+            </svg>
+            Urządzenia domowe
           </button>
         </div>
       </aside>

@@ -15,6 +15,7 @@ import ClockWeatherWidget from "@/components/ClockWeatherWidget";
 import AccountSidebar from "@/components/AccountSidebar";
 import KitchenTimer from "@/components/KitchenTimer";
 import PhotoSlideshow from "@/components/PhotoSlideshow";
+import DevicesPanel from "@/components/DevicesPanel";
 import {
   getHolidayEventsInRange,
   HOLIDAYS_ACCOUNT_ID,
@@ -52,6 +53,7 @@ export default function CalendarBoard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [timerOpen, setTimerOpen] = useState(false);
   const [slideshowOpen, setSlideshowOpen] = useState(false);
+  const [devicesOpen, setDevicesOpen] = useState(false);
 
   const { start, end } = useMemo(
     () => getRangeForView(view, cursorDate),
@@ -301,11 +303,14 @@ export default function CalendarBoard() {
         onToggleAccount={toggleAccount}
         onOpenSlideshow={() => setSlideshowOpen(true)}
         onOpenTimer={() => setTimerOpen(true)}
+        onOpenDevices={() => setDevicesOpen(true)}
       />
 
       <KitchenTimer open={timerOpen} onClose={() => setTimerOpen(false)} />
 
       <PhotoSlideshow open={slideshowOpen} onClose={() => setSlideshowOpen(false)} />
+
+      <DevicesPanel open={devicesOpen} onClose={() => setDevicesOpen(false)} />
     </section>
   );
 }

@@ -7,6 +7,7 @@ import ThemeSwitcherLoader from "@/components/ThemeSwitcherLoader";
 import PhotoManager from "@/components/PhotoManager";
 import NotificationSettingsLoader from "@/components/NotificationSettingsLoader";
 import TrelloSettings from "@/components/TrelloSettings";
+import EweLinkSettings from "@/components/EweLinkSettings";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -141,6 +142,15 @@ export default async function SettingsPage() {
           &quot;Lista zakupów&quot; obok listy zadań na głównym ekranie.
         </p>
         <TrelloSettings />
+      </section>
+
+      <section className="flex flex-col gap-3 border-t border-border pt-6">
+        <h2 className="text-xl font-semibold">eWeLink — inteligentny dom</h2>
+        <p className="text-foreground/50">
+          Połącz konto eWeLink (Sonoff), żeby zobaczyć i sterować swoimi urządzeniami
+          smart home wprost z panelu bocznego.
+        </p>
+        <EweLinkSettings />
       </section>
     </main>
   );
