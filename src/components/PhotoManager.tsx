@@ -34,18 +34,30 @@ export default function PhotoManager() {
     setUploading(true);
     setError(null);
     try {
-      for (const file of files) {
-        const dataUrl = await readFileAsDataUrl(file);
-        const res = await fetch("/api/photos", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dataUrl }),
-        });
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({ error: "Błąd" }));
-          throw new Error(body.error ?? "Nie udało się dodać zdjęcia");
-        }
+      const results = await Promise.allSettled(
+        files.map(async (file) => {
+          const dataUrl = await readFileAsDataUrl(file);
+          const res = await fetch("/api/photos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dataUrl }),
+          });
+          if (!res.ok) {
+            const body = await res.json().catch(() => ({ error: "Błąd" }));
+            throw new Error(body.error ?? "Nie udało się dodać zdjęcia");
+          }
+        }),
+      );
+
+      const failed = results.filter((r) => r.status === "rejected");
+      if (failed.length > 0) {
+        setError(
+          failed.length === files.length
+            ? "Nie udało się dodać żadnego zdjęcia"
+            : `Nie udało się dodać ${failed.length} z ${files.length} zdjęć`,
+        );
       }
+
       const refreshed = await fetch("/api/photos").then((res) => res.json());
       setPhotos(refreshed.photos);
     } catch (e) {

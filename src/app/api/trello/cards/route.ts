@@ -30,12 +30,14 @@ export async function GET() {
   const open = (await openRes.json()) as { id: string; name: string }[];
   const closed = (await closedRes.json()) as { id: string; name: string }[];
 
-  const cards: TrelloCard[] = [
-    ...open.map((c) => ({ ...c, done: false })),
-    ...closed.map((c) => ({ ...c, done: true })),
-  ];
+  // Trello can briefly return the same card in both the open and closed
+  // filters while a state change is propagating; keep the closed (done)
+  // version in that case since it reflects the more recent write.
+  const byId = new Map<string, TrelloCard>();
+  for (const c of open) byId.set(c.id, { ...c, done: false });
+  for (const c of closed) byId.set(c.id, { ...c, done: true });
 
-  return NextResponse.json({ cards, configured: true });
+  return NextResponse.json({ cards: [...byId.values()], configured: true });
 }
 
 // DELETE /api/trello/cards — permanently delete every card on the configured list.
