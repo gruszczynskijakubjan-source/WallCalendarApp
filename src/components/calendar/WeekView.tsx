@@ -118,12 +118,12 @@ export default function WeekView({
               (e) => e.allDay && e.start && isSameDay(parseISO(e.start), day),
             );
             return (
-              <div key={day.toISOString()} className="flex flex-col gap-1 px-1">
+              <div key={day.toISOString()} className="flex min-w-0 flex-col gap-1 px-1">
                 {allDayEvents.map((event) => (
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="flex items-center gap-1.5 truncate rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
+                    className="flex min-w-0 items-center gap-1.5 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                     title={event.summary}
                   >

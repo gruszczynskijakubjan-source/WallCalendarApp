@@ -155,15 +155,15 @@ export default function CalendarBoard() {
 
 
   return (
-    <section className="flex h-full min-h-0 flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <section className="flex h-full min-h-0 flex-col gap-2.5">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
           aria-label="Otwórz panel kalendarzy"
           className="rounded-full p-2 text-foreground/50 hover:bg-surface-muted"
         >
-          <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none">
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none">
             <path
               d="M4 6h16M4 12h16M4 18h16"
               stroke="currentColor"
@@ -172,10 +172,12 @@ export default function CalendarBoard() {
             />
           </svg>
         </button>
-        <div className="flex h-full items-center justify-center rounded-3xl border border-border bg-surface px-8 py-4 shadow-sm">
-          <h1 className="text-3xl font-semibold whitespace-nowrap">Kalendarz Gruszków 🍐</h1>
+        <div className="flex h-full items-center justify-center rounded-2xl border border-border bg-surface px-4 py-2.5 shadow-sm">
+          <h1 className="text-lg font-semibold whitespace-nowrap sm:text-xl">
+            Kalendarz Gruszków 🍐
+          </h1>
         </div>
-        <div className="min-w-64 flex-1">
+        <div className="min-w-0 flex-1">
           <ClockWeatherWidget />
         </div>
       </div>
@@ -194,17 +196,17 @@ export default function CalendarBoard() {
         <p className="rounded-2xl bg-accent-coral/15 p-4 text-accent-coral">{error}</p>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-surface p-3 shadow-sm">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-surface p-2 shadow-sm">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => navigate(-1)}
             aria-label="Wstecz"
-            className="rounded-full px-3 py-2 text-xl text-foreground/50 hover:bg-surface-muted"
+            className="rounded-full px-2.5 py-1.5 text-lg text-foreground/50 hover:bg-surface-muted"
           >
             ‹
           </button>
           {view === "day" && (
-            <span className="text-lg font-medium">{cursorDate.getDate()}</span>
+            <span className="text-sm font-medium">{cursorDate.getDate()}</span>
           )}
           <PeriodPicker
             showMonth={view === "day" || view === "week" || view === "month"}
@@ -214,14 +216,14 @@ export default function CalendarBoard() {
           <button
             onClick={() => navigate(1)}
             aria-label="Dalej"
-            className="rounded-full px-3 py-2 text-xl text-foreground/50 hover:bg-surface-muted"
+            className="rounded-full px-2.5 py-1.5 text-lg text-foreground/50 hover:bg-surface-muted"
           >
             ›
           </button>
           {isCustom && (
             <button
               onClick={goToday}
-              className="ml-2 rounded-full bg-surface-muted px-4 py-2 text-sm font-medium text-foreground/80 hover:bg-border"
+              className="ml-1 rounded-full bg-surface-muted px-3 py-1.5 text-xs font-medium text-foreground/80 hover:bg-border"
             >
               Dziś
             </button>
@@ -233,7 +235,7 @@ export default function CalendarBoard() {
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
                 view === v.id
                   ? "bg-surface text-accent-teal shadow-sm"
                   : "text-foreground/50 hover:text-foreground/80"
@@ -246,7 +248,7 @@ export default function CalendarBoard() {
       </div>
 
       <div
-        className="min-h-0 flex-1 touch-pan-y overflow-hidden rounded-3xl border border-border bg-surface p-4 shadow-sm"
+        className="min-h-0 flex-1 touch-pan-y overflow-hidden rounded-2xl border border-border bg-surface p-3 shadow-sm"
         {...swipeHandlers}
       >
         {loading ? (

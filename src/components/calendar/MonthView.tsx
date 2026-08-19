@@ -114,7 +114,7 @@ export default function MonthView({
                 setDragRange({ startIndex: dayIndex, endIndex: dayIndex });
               }}
               title={holiday ?? undefined}
-              className={`flex flex-col items-stretch overflow-hidden bg-surface p-1 ${
+              className={`flex min-w-0 flex-col items-stretch overflow-hidden bg-surface p-1 ${
                 isSameMonth(day, date) ? "" : "opacity-40"
               } ${holiday ? "bg-accent-gold/10" : ""} ${
                 isInDragRange ? "bg-accent-teal/10 ring-2 ring-inset ring-accent-teal" : ""
@@ -122,10 +122,10 @@ export default function MonthView({
             >
               <button
                 onClick={() => onSelectDay(day)}
-                className="mb-1 flex items-center justify-between rounded-lg text-left hover:bg-surface-muted"
+                className="mb-1 flex min-w-0 items-center justify-between gap-0.5 rounded-lg text-left hover:bg-surface-muted"
               >
                 <span
-                  className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-sm ${
+                  className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm ${
                     isToday(day)
                       ? "bg-accent-coral font-semibold text-white"
                       : holiday
@@ -137,22 +137,22 @@ export default function MonthView({
                 </span>
                 {dayForecast && (
                   <span
-                    className="flex items-center gap-1 pr-1 text-sm font-medium text-foreground/70"
+                    className="flex min-w-0 items-center gap-1 overflow-hidden pr-1 text-sm font-medium text-foreground/70"
                     title={`Min ${Math.round(dayForecast.tempMinC)}° / Maks ${Math.round(dayForecast.tempMaxC)}°`}
                   >
-                    <span className="text-base leading-none">
+                    <span className="shrink-0 text-base leading-none">
                       {weatherIcon(dayForecast.weatherCode)}
                     </span>
-                    {Math.round(dayForecast.tempMaxC)}°
+                    <span className="truncate">{Math.round(dayForecast.tempMaxC)}°</span>
                   </span>
                 )}
               </button>
-              <span className="flex flex-col gap-0.5 overflow-hidden">
+              <span className="flex min-w-0 flex-col gap-0.5 overflow-hidden">
                 {visible.map((event) => (
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="flex items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                    className="flex min-w-0 items-center gap-1 overflow-hidden rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                   >
                     {event.ownerImage && (

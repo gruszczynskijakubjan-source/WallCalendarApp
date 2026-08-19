@@ -117,15 +117,15 @@ export default function TodoList() {
 
   return (
     <>
-      <div className="flex shrink-0 flex-col gap-3 border-b border-border p-4">
+      <div className="flex shrink-0 flex-col gap-2 border-b border-border p-3">
         {accounts.length === 0 && !loading && (
-          <p className="rounded-lg bg-accent-gold/15 p-4 text-sm text-foreground">
+          <p className="rounded-lg bg-accent-gold/15 p-3 text-xs text-foreground">
             Połącz konto Google w ustawieniach, żeby zobaczyć zadania z Google Tasks.
           </p>
         )}
 
         {error && (
-          <p className="rounded-lg bg-accent-coral/15 p-4 text-sm text-accent-coral">{error}</p>
+          <p className="rounded-lg bg-accent-coral/15 p-3 text-xs text-accent-coral">{error}</p>
         )}
 
         <form onSubmit={addTask} className="flex flex-col gap-2">
@@ -134,13 +134,13 @@ export default function TodoList() {
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="Dodaj zadanie…"
-              className="flex-1 rounded-lg border border-border bg-background p-3 text-lg"
+              className="flex-1 rounded-lg border border-border bg-background p-2 text-sm"
             />
             <button
               type="submit"
               disabled={accounts.length === 0}
               suppressHydrationWarning
-              className="rounded-full bg-accent-teal px-5 py-3 text-lg font-medium text-white hover:brightness-95 disabled:opacity-40"
+              className="rounded-full bg-accent-teal px-4 py-2 text-sm font-medium text-white hover:brightness-95 disabled:opacity-40"
             >
               Dodaj
             </button>
@@ -155,7 +155,7 @@ export default function TodoList() {
                     type="button"
                     onClick={() => setNewAccountId(a.id)}
                     title={a.name ?? a.email ?? undefined}
-                    className={`h-8 w-8 shrink-0 rounded-full ring-2 transition ${
+                    className={`h-6 w-6 shrink-0 rounded-full ring-2 transition ${
                       selected ? "ring-accent-teal" : "ring-transparent hover:ring-border"
                     }`}
                   >
@@ -167,7 +167,7 @@ export default function TodoList() {
                         className="h-full w-full rounded-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center rounded-full bg-surface-muted text-sm font-medium text-foreground/60">
+                      <span className="flex h-full w-full items-center justify-center rounded-full bg-surface-muted text-xs font-medium text-foreground/60">
                         {(a.name ?? a.email ?? "?").charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -189,11 +189,11 @@ export default function TodoList() {
           <p className="p-4 text-foreground/50">Brak zadań 🎉</p>
         ) : (
           <>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-1">
               {tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center gap-4 rounded-xl p-4 hover:bg-surface-muted"
+                  className="flex items-center gap-2.5 rounded-lg p-2 hover:bg-surface-muted"
                 >
                   <button
                     type="button"
@@ -204,7 +204,7 @@ export default function TodoList() {
                     }
                     title={task.ownerName ?? undefined}
                     onClick={() => toggleTask(task)}
-                    className={`relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 transition ${
+                    className={`relative h-7 w-7 shrink-0 overflow-hidden rounded-full ring-2 transition ${
                       task.done ? "ring-border hover:ring-foreground/30" : "ring-accent-teal"
                     }`}
                   >
@@ -219,7 +219,7 @@ export default function TodoList() {
                       />
                     ) : (
                       <span
-                        className={`flex h-full w-full items-center justify-center text-sm font-medium transition ${
+                        className={`flex h-full w-full items-center justify-center text-xs font-medium transition ${
                           task.done
                             ? "bg-surface-muted text-foreground/50 opacity-40"
                             : "bg-accent-teal text-white"
@@ -230,7 +230,7 @@ export default function TodoList() {
                     )}
                     {task.done && (
                       <span className="absolute inset-0 flex items-center justify-center bg-foreground/40">
-                        <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none">
+                        <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none">
                           <path
                             d="M3 8.5L6.5 12L13 4.5"
                             stroke="white"
@@ -243,13 +243,13 @@ export default function TodoList() {
                     )}
                   </button>
                   <span
-                    className={`flex-1 text-xl ${task.done ? "text-foreground/40 line-through" : ""}`}
+                    className={`flex-1 text-sm ${task.done ? "text-foreground/40 line-through" : ""}`}
                   >
                     {task.title}
                   </span>
                   <button
                     onClick={() => deleteTask(task.id)}
-                    className="rounded-full px-3 py-1 text-sm text-foreground/40 hover:bg-accent-coral/10 hover:text-accent-coral"
+                    className="rounded-full px-2 py-1 text-xs text-foreground/40 hover:bg-accent-coral/10 hover:text-accent-coral"
                   >
                     Usuń
                   </button>
@@ -258,7 +258,7 @@ export default function TodoList() {
             </ul>
 
             {hasMoreCompleted && (
-              <div ref={sentinelRef} className="p-3 text-center text-sm text-foreground/40">
+              <div ref={sentinelRef} className="p-2 text-center text-xs text-foreground/40">
                 {loadingMore ? "Ładowanie…" : ""}
               </div>
             )}

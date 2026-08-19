@@ -22,16 +22,16 @@ export default function TodaySummary() {
   if (!data) return null;
 
   return (
-    <div className="flex shrink-0 flex-col gap-2 rounded-3xl border border-border bg-surface p-4 shadow-sm">
-      <h2 className="text-lg font-semibold">Dziś w skrócie</h2>
+    <div className="flex shrink-0 flex-col gap-1.5 rounded-2xl border border-border bg-surface p-3 shadow-sm">
+      <h2 className="text-sm font-semibold">Dziś w skrócie</h2>
 
       {data.events.length === 0 ? (
-        <p className="text-sm text-foreground/50">Brak wydarzeń na dziś.</p>
+        <p className="text-xs text-foreground/50">Brak wydarzeń na dziś.</p>
       ) : (
         <ul className="flex flex-col gap-1">
           {data.events.map((e) => (
-            <li key={e.id} className="flex items-center gap-2 text-sm">
-              <span className="w-12 shrink-0 text-foreground/50 tabular-nums">
+            <li key={e.id} className="flex items-center gap-2 text-xs">
+              <span className="w-10 shrink-0 text-foreground/50 tabular-nums">
                 {e.allDay ? "Cały dz." : e.start ? format(parseISO(e.start), "HH:mm") : ""}
               </span>
               <span className="truncate">{e.summary}</span>
@@ -40,7 +40,7 @@ export default function TodaySummary() {
         </ul>
       )}
 
-      <p className="text-sm text-foreground/50">
+      <p className="text-xs text-foreground/50">
         {data.activeTaskCount === 0
           ? "Brak aktywnych zadań 🎉"
           : `${data.activeTaskCount} aktywnych zadań`}

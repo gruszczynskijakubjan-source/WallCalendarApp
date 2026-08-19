@@ -32,31 +32,31 @@ export default function ClockWeatherWidget() {
   }, []);
 
   return (
-    <div className="flex h-full items-center justify-center gap-8 rounded-3xl border border-border bg-surface px-8 py-4 shadow-sm">
+    <div className="flex h-full items-center justify-center gap-4 rounded-2xl border border-border bg-surface px-4 py-2.5 shadow-sm">
       <div className="flex-1 text-center" suppressHydrationWarning>
-        <p className="text-5xl leading-none font-semibold tabular-nums">
+        <p className="text-2xl leading-none font-semibold tabular-nums">
           {format(now, "HH:mm")}
         </p>
-        <p className="mt-1 text-base text-foreground/50 capitalize">
+        <p className="mt-0.5 text-xs text-foreground/50 capitalize">
           {format(now, "EEEE, d MMMM", { locale: pl })}
         </p>
       </div>
 
       {weather && (
-        <div className="flex flex-1 items-center justify-center gap-4 border-l border-border pl-8">
-          <span className="text-5xl" aria-hidden>
+        <div className="flex flex-1 items-center justify-center gap-2.5 border-l border-border pl-4">
+          <span className="text-2xl" aria-hidden>
             {weatherIcon(weather.weatherCode, weather.isDay)}
           </span>
           <div className="text-center">
-            <p className="text-3xl leading-none font-semibold tabular-nums">
+            <p className="text-lg leading-none font-semibold tabular-nums">
               {Math.round(weather.temperatureC)}°C
             </p>
             {weather.label && (
-              <p className="mt-1 text-base text-foreground/50">{weather.label}</p>
+              <p className="mt-0.5 text-xs text-foreground/50">{weather.label}</p>
             )}
             {weather.europeanAqi !== null && (
               <p
-                className="mt-1 text-sm font-medium"
+                className="mt-0.5 text-[11px] font-medium"
                 style={{ color: aqiColor(weather.europeanAqi) }}
                 title="Jakość powietrza (europejski AQI)"
               >
