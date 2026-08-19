@@ -75,7 +75,7 @@ export default function AccountPhotoUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+          className="rounded-full bg-surface-muted px-3 py-1.5 text-sm font-medium text-foreground/80 hover:bg-border disabled:opacity-50"
         >
           {uploading ? "Zapisywanie…" : "Zmień zdjęcie"}
         </button>
@@ -84,7 +84,7 @@ export default function AccountPhotoUpload({
             type="button"
             onClick={handleReset}
             disabled={uploading}
-            className="rounded-full px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+            className="rounded-full px-3 py-1.5 text-sm text-foreground/50 hover:bg-surface-muted disabled:opacity-50"
           >
             Reset
           </button>
@@ -97,7 +97,7 @@ export default function AccountPhotoUpload({
         onChange={handleFileChange}
         className="hidden"
       />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-accent-coral">{error}</p>}
     </div>
   );
 }

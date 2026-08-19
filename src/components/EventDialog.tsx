@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
+import { pl } from "date-fns/locale";
 import type { MergedEvent } from "@/app/api/calendar/events/route";
+import { HOLIDAYS_ACCOUNT_ID } from "@/lib/polishHolidays";
 
 type Account = {
   id: string;
@@ -84,6 +86,7 @@ function EventDialogForm({
   onDeleted: () => void;
 }) {
   const isEditing = event !== null;
+  const isReadOnly = event?.accountId === HOLIDAYS_ACCOUNT_ID;
   const [form, setForm] = useState(() => toFormState(event, initialRange));
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -148,23 +151,49 @@ function EventDialogForm({
     }
   }
 
+  if (isReadOnly && event) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div className="flex w-full max-w-lg flex-col gap-4 rounded-2xl bg-surface p-6 shadow-xl">
+          <h2 className="text-2xl font-semibold">{event.summary}</h2>
+          <p className="text-foreground/60">
+            {event.start &&
+              format(new Date(event.start), "d MMMM yyyy", { locale: pl })}
+          </p>
+          <p className="text-sm text-foreground/40">
+            Święto narodowe — tego wpisu nie można edytować ani usunąć.
+          </p>
+          <div className="flex justify-end pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full bg-surface-muted px-5 py-3 text-lg font-medium hover:bg-border"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl flex flex-col gap-4"
+        className="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-xl flex flex-col gap-4"
       >
         <h2 className="text-2xl font-semibold">
           {isEditing ? "Edytuj wydarzenie" : "Nowe wydarzenie"}
         </h2>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-600">Kalendarz</span>
+          <span className="text-sm font-medium text-foreground/60">Kalendarz</span>
           <select
             value={accountId}
             disabled={isEditing}
             onChange={(e) => setForm((f) => ({ ...f, accountId: e.target.value }))}
-            className="rounded-lg border border-gray-300 p-3 text-lg disabled:bg-gray-100 disabled:text-gray-500"
+            className="rounded-lg border border-border p-3 text-lg disabled:bg-surface-muted disabled:text-foreground/40"
           >
             {accounts.map((a) => (
               <option key={a.id} value={a.id}>
@@ -175,22 +204,22 @@ function EventDialogForm({
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-600">Tytuł</span>
+          <span className="text-sm font-medium text-foreground/60">Tytuł</span>
           <input
             required
             value={form.summary}
             onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
-            className="rounded-lg border border-gray-300 p-3 text-lg"
+            className="rounded-lg border border-border p-3 text-lg"
             placeholder="np. Wizyta u lekarza"
           />
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-600">Miejsce</span>
+          <span className="text-sm font-medium text-foreground/60">Miejsce</span>
           <input
             value={form.location}
             onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
-            className="rounded-lg border border-gray-300 p-3 text-lg"
+            className="rounded-lg border border-border p-3 text-lg"
           />
         </label>
 
@@ -205,42 +234,42 @@ function EventDialogForm({
         </label>
 
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-medium text-gray-600">Data</span>
+          <span className="text-sm font-medium text-foreground/60">Data</span>
           <input
             type="date"
             required
             value={form.date}
             onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-            className="rounded-lg border border-gray-300 p-3 text-lg"
+            className="rounded-lg border border-border p-3 text-lg"
           />
         </label>
 
         {!form.allDay && (
           <div className="flex gap-3">
             <label className="flex flex-1 flex-col gap-1">
-              <span className="text-sm font-medium text-gray-600">Od</span>
+              <span className="text-sm font-medium text-foreground/60">Od</span>
               <input
                 type="time"
                 required
                 value={form.startTime}
                 onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))}
-                className="rounded-lg border border-gray-300 p-3 text-lg"
+                className="rounded-lg border border-border p-3 text-lg"
               />
             </label>
             <label className="flex flex-1 flex-col gap-1">
-              <span className="text-sm font-medium text-gray-600">Do</span>
+              <span className="text-sm font-medium text-foreground/60">Do</span>
               <input
                 type="time"
                 required
                 value={form.endTime}
                 onChange={(e) => setForm((f) => ({ ...f, endTime: e.target.value }))}
-                className="rounded-lg border border-gray-300 p-3 text-lg"
+                className="rounded-lg border border-border p-3 text-lg"
               />
             </label>
           </div>
         )}
 
-        {error && <p className="text-red-600">{error}</p>}
+        {error && <p className="text-accent-coral">{error}</p>}
 
         <div className="flex items-center justify-between gap-3 pt-2">
           {isEditing ? (
@@ -248,7 +277,7 @@ function EventDialogForm({
               type="button"
               onClick={handleDelete}
               disabled={deleting || submitting}
-              className="rounded-full px-5 py-3 text-lg text-red-600 hover:bg-red-50 disabled:opacity-50"
+              className="rounded-full px-5 py-3 text-lg text-accent-coral hover:bg-accent-coral/10 disabled:opacity-50"
             >
               {deleting ? "Usuwanie…" : "Usuń"}
             </button>
@@ -260,14 +289,14 @@ function EventDialogForm({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full px-5 py-3 text-lg text-gray-600 hover:bg-gray-100"
+              className="rounded-full px-5 py-3 text-lg text-foreground/60 hover:bg-surface-muted"
             >
               Anuluj
             </button>
             <button
               type="submit"
               disabled={submitting || deleting}
-              className="rounded-full bg-blue-600 px-6 py-3 text-lg font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              className="rounded-full bg-accent-teal px-6 py-3 text-lg font-medium text-white hover:brightness-95 disabled:opacity-50"
             >
               {submitting ? "Zapisywanie…" : isEditing ? "Zapisz" : "Dodaj"}
             </button>

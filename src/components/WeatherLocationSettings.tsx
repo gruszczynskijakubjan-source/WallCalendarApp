@@ -35,22 +35,22 @@ export default function WeatherLocationSettings({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-gray-200 p-3">
+    <div className="flex items-center justify-between rounded-xl border border-border p-3">
       <div>
         <p className="font-medium">Pogoda dla lokalizacji tego urządzenia</p>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-foreground/50">
           {location
             ? `Włączone (${location.lat.toFixed(2)}, ${location.lon.toFixed(2)})`
             : "Wyłączone — widget pogody pokazuje domyślną lokalizację z konfiguracji serwera."}
         </p>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-accent-coral">{error}</p>}
       </div>
 
       {location ? (
         <button
           type="button"
           onClick={handleDisable}
-          className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+          className="rounded-full bg-surface-muted px-4 py-2 text-sm font-medium text-foreground/80 hover:bg-border"
         >
           Wyłącz
         </button>
@@ -59,7 +59,7 @@ export default function WeatherLocationSettings({
           type="button"
           onClick={handleEnable}
           disabled={loading}
-          className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="rounded-full bg-accent-teal px-4 py-2 text-sm font-medium text-white hover:brightness-95 disabled:opacity-50"
         >
           {loading ? "Pobieranie…" : "Włącz"}
         </button>

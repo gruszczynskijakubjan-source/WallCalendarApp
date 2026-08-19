@@ -67,7 +67,7 @@ export default function DayView({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
-      <h2 className="mb-2 shrink-0 text-lg font-semibold capitalize text-gray-700">
+      <h2 className="mb-2 shrink-0 text-lg font-semibold capitalize text-foreground">
         {format(date, "EEEE, d MMMM yyyy", { locale: pl })}
       </h2>
 
@@ -77,14 +77,24 @@ export default function DayView({
             <li key={event.id}>
               <button
                 onClick={() => onSelectEvent(event)}
-                className="flex w-full items-center gap-3 rounded-xl bg-gray-50 p-3 text-left hover:bg-gray-100"
+                className="flex w-full items-center gap-3 rounded-xl bg-surface-muted p-3 text-left hover:bg-surface-muted"
               >
-                <span
-                  className="h-3 w-3 shrink-0 rounded-full"
-                  style={{ background: event.ownerColor }}
-                />
+                {event.ownerImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={event.ownerImage}
+                    alt=""
+                    className="h-6 w-6 shrink-0 rounded-full object-cover ring-2"
+                    style={{ boxShadow: `0 0 0 2px ${event.ownerColor}` }}
+                  />
+                ) : (
+                  <span
+                    className="h-3 w-3 shrink-0 rounded-full"
+                    style={{ background: event.ownerColor }}
+                  />
+                )}
                 <span className="flex-1 font-medium">{event.summary}</span>
-                <span className="text-sm text-gray-500">Cały dzień</span>
+                <span className="text-sm text-foreground/50">Cały dzień</span>
               </button>
             </li>
           ))}
@@ -97,7 +107,7 @@ export default function DayView({
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                className="border-t border-gray-100 pt-1 pr-2 text-right text-xs text-gray-400 first:border-t-0"
+                className="border-t border-border pt-1 pr-2 text-right text-xs text-foreground/40 first:border-t-0"
                 style={{ height: HOUR_HEIGHT_PX, width: 64 }}
               >
                 {String(hour).padStart(2, "0")}:00
@@ -128,7 +138,7 @@ export default function DayView({
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                className="border-t border-gray-100 first:border-t-0"
+                className="border-t border-border first:border-t-0"
                 style={{ height: HOUR_HEIGHT_PX }}
               >
                 {timedEvents
@@ -140,13 +150,23 @@ export default function DayView({
                       className="mb-1 flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:brightness-95"
                       style={{ background: `${event.ownerColor}1a` }}
                     >
-                      <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{ background: event.ownerColor }}
-                      />
+                      {event.ownerImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={event.ownerImage}
+                          alt=""
+                          className="h-5 w-5 shrink-0 rounded-full object-cover"
+                          style={{ boxShadow: `0 0 0 2px ${event.ownerColor}` }}
+                        />
+                      ) : (
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ background: event.ownerColor }}
+                        />
+                      )}
                       <span className="flex-1">
                         <span className="font-medium">{event.summary}</span>
-                        <span className="ml-2 text-gray-500">
+                        <span className="ml-2 text-foreground/50">
                           {format(parseISO(event.start!), "HH:mm")}
                         </span>
                       </span>
@@ -157,7 +177,7 @@ export default function DayView({
 
             {selection && (
               <div
-                className="pointer-events-none absolute inset-x-0 rounded-lg border-2 border-blue-500 bg-blue-500/20"
+                className="pointer-events-none absolute inset-x-0 rounded-lg border-2 border-accent-teal bg-accent-teal/20"
                 style={{
                   top: Math.min(selection.startSlot, selection.endSlot) * SLOT_HEIGHT_PX,
                   height:
@@ -171,8 +191,8 @@ export default function DayView({
                 className="pointer-events-none absolute inset-x-0 z-10 flex items-center"
                 style={{ top: nowOffsetPx }}
               >
-                <span className="ml-1 h-2.5 w-2.5 shrink-0 rounded-full bg-red-500" />
-                <span className="h-px flex-1 bg-red-500" />
+                <span className="ml-1 h-2.5 w-2.5 shrink-0 rounded-full bg-accent-coral" />
+                <span className="h-px flex-1 bg-accent-coral" />
               </div>
             )}
           </div>
@@ -180,7 +200,7 @@ export default function DayView({
       </div>
 
       {dayEvents.length === 0 && (
-        <p className="p-4 text-center text-gray-400">Brak wydarzeń tego dnia.</p>
+        <p className="p-4 text-center text-foreground/40">Brak wydarzeń tego dnia.</p>
       )}
     </div>
   );

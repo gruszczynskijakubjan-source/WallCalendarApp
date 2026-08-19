@@ -76,6 +76,13 @@ model Todo {
   createdById String?
 }
 
+// Family photos for the fullscreen slideshow ("digital picture frame" mode).
+model Photo {
+  id        String   @id @default(cuid())
+  dataUrl   String
+  createdAt DateTime @default(now())
+}
+
 // Placeholder for future Trello integration
 model TrelloConnection {
   id          String   @id @default(cuid())

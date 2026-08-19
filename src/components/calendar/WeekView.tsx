@@ -79,14 +79,14 @@ export default function WeekView({
           <button
             key={day.toISOString()}
             onClick={() => onSelectDay(day)}
-            className="flex flex-col items-center rounded-lg py-1 hover:bg-gray-50"
+            className="flex flex-col items-center rounded-lg py-1 hover:bg-surface-muted"
           >
-            <span className="text-xs font-medium text-gray-400 capitalize">
+            <span className="text-xs font-medium text-foreground/40 capitalize">
               {format(day, "EEE", { locale: pl })}
             </span>
             <span
               className={`mt-0.5 flex h-7 w-7 items-center justify-center rounded-full text-sm ${
-                isToday(day) ? "bg-blue-600 font-semibold text-white" : "text-gray-700"
+                isToday(day) ? "bg-accent-coral font-semibold text-white" : "text-foreground"
               }`}
             >
               {format(day, "d")}
@@ -110,11 +110,19 @@ export default function WeekView({
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="truncate rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
+                    className="flex items-center gap-1.5 truncate rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                     title={event.summary}
                   >
-                    {event.summary}
+                    {event.ownerImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={event.ownerImage}
+                        alt=""
+                        className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-white/60"
+                      />
+                    )}
+                    <span className="truncate">{event.summary}</span>
                   </button>
                 ))}
               </div>
@@ -129,7 +137,7 @@ export default function WeekView({
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                className="border-t border-gray-100 pt-1 pr-2 text-right text-xs text-gray-400 first:border-t-0"
+                className="border-t border-border pt-1 pr-2 text-right text-xs text-foreground/40 first:border-t-0"
                 style={{ height: HOUR_HEIGHT_PX }}
               >
                 {String(hour).padStart(2, "0")}:00
@@ -146,7 +154,7 @@ export default function WeekView({
             return (
               <div
                 key={day.toISOString()}
-                className="relative touch-none border-l border-gray-100 select-none"
+                className="relative touch-none border-l border-border select-none"
                 onPointerDown={(e) => {
                   if ((e.target as HTMLElement).closest("button")) return;
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -168,7 +176,7 @@ export default function WeekView({
                 {HOURS.map((hour) => (
                   <div
                     key={hour}
-                    className="border-t border-gray-100 first:border-t-0"
+                    className="border-t border-border first:border-t-0"
                     style={{ height: HOUR_HEIGHT_PX }}
                   >
                     {dayEvents
@@ -177,11 +185,19 @@ export default function WeekView({
                         <button
                           key={event.id}
                           onClick={() => onSelectEvent(event)}
-                          className="mx-0.5 mb-0.5 block w-[calc(100%-0.25rem)] truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
                           style={{ background: event.ownerColor }}
                           title={event.summary}
                         >
-                          {event.summary}
+                          {event.ownerImage && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={event.ownerImage}
+                              alt=""
+                              className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-white/60"
+                            />
+                          )}
+                          <span className="truncate">{event.summary}</span>
                         </button>
                       ))}
                   </div>
@@ -189,7 +205,7 @@ export default function WeekView({
 
                 {daySelection && (
                   <div
-                    className="pointer-events-none absolute inset-x-0 rounded border-2 border-blue-500 bg-blue-500/20"
+                    className="pointer-events-none absolute inset-x-0 rounded border-2 border-accent-teal bg-accent-teal/20"
                     style={{
                       top:
                         Math.min(daySelection.startSlot, daySelection.endSlot) *
@@ -203,7 +219,7 @@ export default function WeekView({
 
                 {isToday(day) && (
                   <div
-                    className="pointer-events-none absolute inset-x-0 z-10 h-px bg-red-500"
+                    className="pointer-events-none absolute inset-x-0 z-10 h-px bg-accent-coral"
                     style={{ top: nowOffsetPx }}
                   />
                 )}

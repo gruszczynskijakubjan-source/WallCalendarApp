@@ -13,6 +13,13 @@ import { useSwipe } from "@/lib/useSwipe";
 import PeriodPicker from "@/components/calendar/PeriodPicker";
 import ClockWeatherWidget from "@/components/ClockWeatherWidget";
 import AccountSidebar from "@/components/AccountSidebar";
+import KitchenTimer from "@/components/KitchenTimer";
+import PhotoSlideshow from "@/components/PhotoSlideshow";
+import {
+  getHolidayEventsInRange,
+  HOLIDAYS_ACCOUNT_ID,
+  HOLIDAYS_ACCOUNT_COLOR,
+} from "@/lib/polishHolidays";
 
 type Account = {
   id: string;
@@ -43,6 +50,8 @@ export default function CalendarBoard() {
   const [dialogState, setDialogState] = useState<DialogState | null>(null);
   const [activeAccountIds, setActiveAccountIds] = useState<Set<string> | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [timerOpen, setTimerOpen] = useState(false);
+  const [slideshowOpen, setSlideshowOpen] = useState(false);
 
   const { start, end } = useMemo(
     () => getRangeForView(view, cursorDate),
@@ -66,7 +75,7 @@ export default function CalendarBoard() {
       const eventsData = await eventsRes.json();
       const accountsData = await accountsRes.json();
 
-      setEvents(eventsData.events);
+      setEvents([...eventsData.events, ...getHolidayEventsInRange(start, end)]);
       setAccounts(accountsData);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Wystąpił błąd");
@@ -100,10 +109,24 @@ export default function CalendarBoard() {
     setView("day");
   }
 
+  const sidebarAccounts = useMemo(
+    () => [
+      ...accounts,
+      {
+        id: HOLIDAYS_ACCOUNT_ID,
+        name: "Święta w Polsce",
+        email: null,
+        image: null,
+        color: HOLIDAYS_ACCOUNT_COLOR,
+      },
+    ],
+    [accounts],
+  );
+
   function toggleAccount(accountId: string) {
     setActiveAccountIds((prev) => {
       // `null` means "everyone active"; expand it to an explicit set on first click.
-      const base = prev ?? new Set(accounts.map((a) => a.id));
+      const base = prev ?? new Set(sidebarAccounts.map((a) => a.id));
       const next = new Set(base);
       if (next.has(accountId)) {
         next.delete(accountId);
@@ -111,7 +134,7 @@ export default function CalendarBoard() {
         next.add(accountId);
       }
       // If everyone ends up selected again, go back to the unfiltered "null" state.
-      return next.size === accounts.length ? null : next;
+      return next.size === sidebarAccounts.length ? null : next;
     });
   }
 
@@ -136,7 +159,7 @@ export default function CalendarBoard() {
           type="button"
           onClick={() => setSidebarOpen(true)}
           aria-label="Otwórz panel kalendarzy"
-          className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+          className="rounded-full p-2 text-foreground/50 hover:bg-surface-muted"
         >
           <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none">
             <path
@@ -147,7 +170,7 @@ export default function CalendarBoard() {
             />
           </svg>
         </button>
-        <div className="flex h-full items-center justify-center rounded-2xl border border-gray-200 bg-white px-8 py-4">
+        <div className="flex h-full items-center justify-center rounded-3xl border border-border bg-surface px-8 py-4 shadow-sm">
           <h1 className="text-3xl font-semibold whitespace-nowrap">Kalendarz Gruszków 🍐</h1>
         </div>
         <div className="min-w-64 flex-1">
@@ -156,7 +179,7 @@ export default function CalendarBoard() {
       </div>
 
       {accounts.length === 0 && !loading && (
-        <p className="rounded-lg bg-amber-100 p-4 text-amber-900">
+        <p className="rounded-2xl bg-accent-gold/15 p-4 text-foreground">
           Nie połączono jeszcze żadnego konta Google. Przejdź do{" "}
           <a href="/settings" className="underline font-medium">
             ustawień
@@ -165,14 +188,16 @@ export default function CalendarBoard() {
         </p>
       )}
 
-      {error && <p className="rounded-lg bg-red-100 p-4 text-red-900">{error}</p>}
+      {error && (
+        <p className="rounded-2xl bg-accent-coral/15 p-4 text-accent-coral">{error}</p>
+      )}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-border bg-surface p-3 shadow-sm">
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
             aria-label="Wstecz"
-            className="rounded-full px-3 py-2 text-xl text-gray-500 hover:bg-gray-100"
+            className="rounded-full px-3 py-2 text-xl text-foreground/50 hover:bg-surface-muted"
           >
             ‹
           </button>
@@ -187,29 +212,29 @@ export default function CalendarBoard() {
           <button
             onClick={() => navigate(1)}
             aria-label="Dalej"
-            className="rounded-full px-3 py-2 text-xl text-gray-500 hover:bg-gray-100"
+            className="rounded-full px-3 py-2 text-xl text-foreground/50 hover:bg-surface-muted"
           >
             ›
           </button>
           {isCustom && (
             <button
               onClick={goToday}
-              className="ml-2 rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+              className="ml-2 rounded-full bg-surface-muted px-4 py-2 text-sm font-medium text-foreground/80 hover:bg-border"
             >
               Dziś
             </button>
           )}
         </div>
 
-        <div className="flex rounded-full bg-gray-100 p-1">
+        <div className="flex rounded-full bg-surface-muted p-1">
           {VIEWS.map((v) => (
             <button
               key={v.id}
               onClick={() => setView(v.id)}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 view === v.id
-                  ? "bg-white text-blue-600 shadow"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-surface text-accent-teal shadow-sm"
+                  : "text-foreground/50 hover:text-foreground/80"
               }`}
             >
               {v.label}
@@ -219,11 +244,11 @@ export default function CalendarBoard() {
       </div>
 
       <div
-        className="min-h-0 flex-1 touch-pan-y overflow-hidden rounded-2xl border border-gray-200 bg-white p-4"
+        className="min-h-0 flex-1 touch-pan-y overflow-hidden rounded-3xl border border-border bg-surface p-4 shadow-sm"
         {...swipeHandlers}
       >
         {loading ? (
-          <p className="p-6 text-gray-500">Ładowanie wydarzeń…</p>
+          <p className="p-6 text-foreground/50">Ładowanie wydarzeń…</p>
         ) : view === "day" ? (
           <DayView
             date={cursorDate}
@@ -271,10 +296,16 @@ export default function CalendarBoard() {
       <AccountSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
-        accounts={accounts}
+        accounts={sidebarAccounts}
         activeAccountIds={activeAccountIds}
         onToggleAccount={toggleAccount}
+        onOpenSlideshow={() => setSlideshowOpen(true)}
+        onOpenTimer={() => setTimerOpen(true)}
       />
+
+      <KitchenTimer open={timerOpen} onClose={() => setTimerOpen(false)} />
+
+      <PhotoSlideshow open={slideshowOpen} onClose={() => setSlideshowOpen(false)} />
     </section>
   );
 }

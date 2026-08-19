@@ -5,6 +5,7 @@ export type MergedEvent = {
   id: string;
   accountId: string;
   ownerName: string | null;
+  ownerImage: string | null;
   ownerColor: string;
   summary: string;
   description?: string | null;
@@ -59,6 +60,7 @@ export async function GET(request: Request) {
             id: `${account.id}:${event.id}`,
             accountId: account.id,
             ownerName: account.user.name,
+            ownerImage: account.user.customImage ?? account.user.image,
             ownerColor: overrideColor ?? calendarColor,
             summary: event.summary ?? "(bez tytułu)",
             description: event.description,

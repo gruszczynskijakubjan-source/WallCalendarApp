@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Autumn (default) — warm, family-friendly neutrals. */
+:root,
+:root[data-theme="autumn"] {
+  --background: #faf6f0;
+  --foreground: #3f3730;
+
+  --surface: #fffdfa;
+  --surface-muted: #f3ecdf;
+  --border: #e8dcc8;
+
+  --accent-coral: #f2745c;
+  --accent-teal: #3f9c93;
+  --accent-gold: #e0a52c;
+  --accent-plum: #a5698a;
+}
+
+/* Winter — cool, calm blues with a frosty feel. */
+:root[data-theme="winter"] {
+  --background: #eef3f8;
+  --foreground: #2c3a49;
+
+  --surface: #ffffff;
+  --surface-muted: #e3ecf4;
+  --border: #cddce8;
+
+  --accent-coral: #d9695a;
+  --accent-teal: #2f8fae;
+  --accent-gold: #c9a24a;
+  --accent-plum: #6f7fb0;
+}
+
+/* Spring — fresh greens and soft blossom pink. */
+:root[data-theme="spring"] {
+  --background: #f3f8ee;
+  --foreground: #37402f;
+
+  --surface: #fffef9;
+  --surface-muted: #e7f1dd;
+  --border: #d5e6c4;
+
+  --accent-coral: #e88a8a;
+  --accent-teal: #5aa07a;
+  --accent-gold: #d9b23c;
+  --accent-plum: #b17bb5;
+}
+
+/* Summer — bright, sunny warmth. */
+:root[data-theme="summer"] {
+  --background: #fef8ec;
+  --foreground: #40331f;
+
+  --surface: #ffffff;
+  --surface-muted: #fbecc9;
+  --border: #f0dba4;
+
+  --accent-coral: #ef6f4f;
+  --accent-teal: #2c9a8f;
+  --accent-gold: #e8a622;
+  --accent-plum: #c26b8f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-accent-coral: var(--accent-coral);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-plum: var(--accent-plum);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }

@@ -5,9 +5,15 @@ type Account = {
   name: string | null;
   email: string | null;
   image: string | null;
+  color?: string;
 };
 
-const FALLBACK_COLORS = ["#2563eb", "#db2777", "#16a34a", "#ea580c"];
+const FALLBACK_COLORS = [
+  "var(--accent-coral)",
+  "var(--accent-teal)",
+  "var(--accent-gold)",
+  "var(--accent-plum)",
+];
 
 export default function AccountSidebar({
   open,
@@ -15,12 +21,16 @@ export default function AccountSidebar({
   accounts,
   activeAccountIds,
   onToggleAccount,
+  onOpenSlideshow,
+  onOpenTimer,
 }: {
   open: boolean;
   onClose: () => void;
   accounts: Account[];
   activeAccountIds: Set<string> | null;
   onToggleAccount: (accountId: string) => void;
+  onOpenSlideshow: () => void;
+  onOpenTimer: () => void;
 }) {
   return (
     <>
@@ -33,7 +43,7 @@ export default function AccountSidebar({
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-40 flex h-full w-72 flex-col gap-4 bg-white p-4 shadow-xl transition-transform duration-200 ${
+        className={`fixed top-0 left-0 z-40 flex h-full w-72 flex-col gap-4 bg-surface p-4 shadow-xl transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -43,7 +53,7 @@ export default function AccountSidebar({
             type="button"
             onClick={onClose}
             aria-label="Zamknij panel"
-            className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+            className="rounded-full p-2 text-foreground/50 hover:bg-surface-muted"
           >
             ✕
           </button>
@@ -52,14 +62,14 @@ export default function AccountSidebar({
         <ul className="flex flex-col gap-1">
           {accounts.map((a, i) => {
             const isActive = activeAccountIds === null || activeAccountIds.has(a.id);
-            const fallbackColor = FALLBACK_COLORS[i % FALLBACK_COLORS.length];
+            const fallbackColor = a.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length];
             return (
               <li key={a.id}>
                 <button
                   type="button"
                   onClick={() => onToggleAccount(a.id)}
                   className={`flex w-full items-center gap-3 rounded-xl p-2 text-left transition ${
-                    isActive ? "bg-gray-50 hover:bg-gray-100" : "hover:bg-gray-50"
+                    isActive ? "bg-surface-muted hover:bg-border" : "hover:bg-surface-muted"
                   }`}
                 >
                   <span
@@ -83,13 +93,13 @@ export default function AccountSidebar({
                     )}
                   </span>
                   <span
-                    className={`flex-1 font-medium ${isActive ? "text-gray-900" : "text-gray-400"}`}
+                    className={`flex-1 font-medium ${isActive ? "text-foreground" : "text-foreground/40"}`}
                   >
                     {a.name ?? a.email}
                   </span>
                   <span
                     className={`h-5 w-5 shrink-0 rounded-full border-2 transition ${
-                      isActive ? "border-blue-600 bg-blue-600" : "border-gray-300"
+                      isActive ? "border-accent-teal bg-accent-teal" : "border-border"
                     }`}
                   >
                     {isActive && (
@@ -109,9 +119,49 @@ export default function AccountSidebar({
             );
           })}
           {accounts.length === 0 && (
-            <li className="p-2 text-sm text-gray-400">Brak połączonych kont.</li>
+            <li className="p-2 text-sm text-foreground/40">Brak połączonych kont.</li>
           )}
         </ul>
+
+        <div className="mt-2 flex flex-col gap-1 border-t border-border pt-4">
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onOpenSlideshow();
+            }}
+            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
+              <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
+              <path
+                d="M3 15l4.5-4.5a1 1 0 0 1 1.4 0L13 14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle cx="16" cy="9" r="1.5" fill="currentColor" />
+            </svg>
+            Ramka cyfrowa
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onOpenTimer();
+            }}
+            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
+              <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="2" />
+              <path d="M12 9v4l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M10 2h4M12 2v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            Timer kuchenny
+          </button>
+        </div>
       </aside>
     </>
   );

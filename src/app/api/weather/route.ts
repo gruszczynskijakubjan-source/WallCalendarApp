@@ -5,6 +5,7 @@ export type WeatherResponse = {
   weatherCode: number;
   isDay: boolean;
   label: string | null;
+  europeanAqi: number | null;
 };
 
 // WMO weather codes -> short Polish description, used for the tooltip/aria-label.
@@ -59,18 +60,28 @@ export async function GET(request: Request) {
   url.searchParams.set("current", "temperature_2m,weather_code,is_day");
   url.searchParams.set("timezone", "auto");
 
-  const res = await fetch(url, { next: { revalidate: 600 } });
+  const airQualityUrl = new URL("https://air-quality-api.open-meteo.com/v1/air-quality");
+  airQualityUrl.searchParams.set("latitude", lat);
+  airQualityUrl.searchParams.set("longitude", lon);
+  airQualityUrl.searchParams.set("current", "european_aqi");
+
+  const [res, airRes] = await Promise.all([
+    fetch(url, { next: { revalidate: 600 } }),
+    fetch(airQualityUrl, { next: { revalidate: 3600 } }),
+  ]);
   if (!res.ok) {
     return NextResponse.json({ error: "Nie udało się pobrać pogody" }, { status: 502 });
   }
 
   const data = await res.json();
+  const airData = airRes.ok ? await airRes.json() : null;
 
   const weather: WeatherResponse = {
     temperatureC: data.current.temperature_2m,
     weatherCode: data.current.weather_code,
     isDay: data.current.is_day === 1,
     label,
+    europeanAqi: airData?.current?.european_aqi ?? null,
   };
 
   return NextResponse.json(weather);

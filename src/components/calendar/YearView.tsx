@@ -36,11 +36,11 @@ function MiniMonth({
   );
 
   return (
-    <div className="rounded-xl border border-gray-100 p-2">
-      <h3 className="mb-1 text-center text-sm font-semibold capitalize text-gray-700">
+    <div className="rounded-xl border border-border p-2">
+      <h3 className="mb-1 text-center text-sm font-semibold capitalize text-foreground">
         {format(month, "LLLL", { locale: pl })}
       </h3>
-      <div className="grid grid-cols-7 gap-y-0.5 text-center text-[10px] text-gray-400">
+      <div className="grid grid-cols-7 gap-y-0.5 text-center text-[10px] text-foreground/40">
         {WEEKDAY_LABELS.map((label, i) => (
           <div key={`${label}-${i}`}>{label}</div>
         ))}
@@ -50,13 +50,13 @@ function MiniMonth({
             <button
               key={day.toISOString()}
               onClick={() => onSelectDay(day)}
-              className={`relative mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[11px] hover:bg-gray-100 ${
-                isSameMonth(day, month) ? "text-gray-700" : "text-gray-300"
-              } ${isToday(day) ? "bg-blue-600 font-semibold text-white hover:bg-blue-600" : ""}`}
+              className={`relative mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[11px] hover:bg-surface-muted ${
+                isSameMonth(day, month) ? "text-foreground" : "text-foreground/30"
+              } ${isToday(day) ? "bg-accent-coral font-semibold text-white hover:bg-accent-coral" : ""}`}
             >
               {format(day, "d")}
               {hasEvent && !isToday(day) && (
-                <span className="absolute bottom-0.5 h-1 w-1 rounded-full bg-blue-500" />
+                <span className="absolute bottom-0.5 h-1 w-1 rounded-full bg-accent-coral" />
               )}
             </button>
           );
@@ -82,7 +82,7 @@ export default function YearView({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
-      <h2 className="mb-2 shrink-0 text-lg font-semibold text-gray-700">
+      <h2 className="mb-2 shrink-0 text-lg font-semibold text-foreground">
         {format(date, "yyyy")}
       </h2>
       <div className="grid min-h-0 flex-1 grid-cols-3 gap-3 overflow-y-auto">

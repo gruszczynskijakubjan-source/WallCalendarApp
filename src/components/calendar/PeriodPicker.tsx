@@ -50,13 +50,13 @@ function Dropdown({
       <button
         type="button"
         onClick={onToggle}
-        className="rounded-lg px-2 py-1 text-center text-lg font-medium capitalize hover:bg-gray-100"
+        className="rounded-lg px-2 py-1 text-center text-lg font-medium capitalize hover:bg-surface-muted"
       >
         {label}
       </button>
 
       {open && (
-        <div className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
+        <div className="absolute top-full left-1/2 z-20 mt-2 -translate-x-1/2 rounded-2xl border border-border bg-surface p-2 shadow-lg">
           {children}
         </div>
       )}
@@ -90,8 +90,8 @@ function MonthDropdown({
             key={monthLabel}
             type="button"
             onClick={() => onSelect(setMonth(date, i))}
-            className={`rounded-lg px-3 py-2 text-left text-sm capitalize hover:bg-gray-100 ${
-              date.getMonth() === i ? "bg-blue-50 font-medium text-blue-600" : ""
+            className={`rounded-lg px-3 py-2 text-left text-sm capitalize hover:bg-surface-muted ${
+              date.getMonth() === i ? "bg-accent-teal/10 font-medium text-accent-teal" : ""
             }`}
           >
             {monthLabel}
@@ -134,8 +134,8 @@ function YearDropdown({
             key={year}
             type="button"
             onClick={() => onSelect(setYear(date, year))}
-            className={`rounded-lg px-3 py-2 text-sm hover:bg-gray-100 ${
-              year === currentYear ? "bg-blue-50 font-medium text-blue-600" : ""
+            className={`rounded-lg px-3 py-2 text-sm hover:bg-surface-muted ${
+              year === currentYear ? "bg-accent-teal/10 font-medium text-accent-teal" : ""
             }`}
           >
             {year}
