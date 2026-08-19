@@ -116,10 +116,8 @@ export default function TodoList() {
   }
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border border-border bg-surface shadow-sm">
+    <>
       <div className="flex shrink-0 flex-col gap-3 border-b border-border p-4">
-        <h2 className="text-2xl font-semibold">Lista zadań</h2>
-
         {accounts.length === 0 && !loading && (
           <p className="rounded-lg bg-accent-gold/15 p-4 text-sm text-foreground">
             Połącz konto Google w ustawieniach, żeby zobaczyć zadania z Google Tasks.
@@ -183,7 +181,7 @@ export default function TodoList() {
 
       <div
         data-scroll-container="true"
-        className="flex-1 overflow-y-auto p-2"
+        className="min-h-0 flex-1 overflow-y-auto p-2"
       >
         {loading ? (
           <p className="p-4 text-foreground/50">Ładowanie…</p>
@@ -267,6 +265,6 @@ export default function TodoList() {
           </>
         )}
       </div>
-    </section>
+    </>
   );
 }

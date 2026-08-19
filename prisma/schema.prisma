@@ -83,12 +83,16 @@ model Photo {
   createdAt DateTime @default(now())
 }
 
-// Placeholder for future Trello integration
+// Single, app-wide Trello connection (not per Google account) powering the
+// "Lista zakupów" view. Expected to have at most one row.
 model TrelloConnection {
-  id          String   @id @default(cuid())
-  userEmail   String   @unique
-  apiKey      String
-  token       String
-  boardId     String?
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  apiKey    String
+  token     String
+  boardId   String?
+  boardName String?
+  listId    String?
+  listName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

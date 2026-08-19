@@ -1,6 +1,6 @@
 import Link from "next/link";
 import CalendarBoard from "@/components/CalendarBoard";
-import TodoList from "@/components/TodoList";
+import TaskListPanel from "@/components/TaskListPanel";
 import TodaySummary from "@/components/TodaySummary";
 import EventReminders from "@/components/EventReminders";
 
@@ -12,7 +12,7 @@ export default function Home() {
         <CalendarBoard />
         <div className="flex min-h-0 flex-col gap-4">
           <TodaySummary />
-          <TodoList />
+          <TaskListPanel />
         </div>
       </div>
       <footer className="flex justify-center">

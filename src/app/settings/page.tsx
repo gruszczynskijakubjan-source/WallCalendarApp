@@ -6,6 +6,7 @@ import AccountPhotoUpload from "@/components/AccountPhotoUpload";
 import ThemeSwitcherLoader from "@/components/ThemeSwitcherLoader";
 import PhotoManager from "@/components/PhotoManager";
 import NotificationSettingsLoader from "@/components/NotificationSettingsLoader";
+import TrelloSettings from "@/components/TrelloSettings";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -134,11 +135,12 @@ export default async function SettingsPage() {
       </section>
 
       <section className="flex flex-col gap-3 border-t border-border pt-6">
-        <h2 className="text-xl font-semibold">Trello (wkrótce)</h2>
+        <h2 className="text-xl font-semibold">Trello — lista zakupów</h2>
         <p className="text-foreground/50">
-          Miejsce na integrację z Twoimi zadaniami Trello — pojawi się tutaj w
-          kolejnym etapie.
+          Połącz konto Trello i wskaż tablicę oraz listę, która ma pojawić się jako
+          &quot;Lista zakupów&quot; obok listy zadań na głównym ekranie.
         </p>
+        <TrelloSettings />
       </section>
     </main>
   );
