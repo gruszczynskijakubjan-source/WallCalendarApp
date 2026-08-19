@@ -8,7 +8,7 @@ export async function GET() {
       id: a.id,
       name: a.user.name,
       email: a.user.email,
-      image: a.user.image,
+      image: a.user.customImage ?? a.user.image,
       householdRole: a.user.householdRole,
     })),
   );

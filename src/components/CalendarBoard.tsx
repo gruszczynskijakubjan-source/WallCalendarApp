@@ -12,6 +12,7 @@ import { getRangeForView, type CalendarView } from "@/lib/calendarRange";
 import { useSwipe } from "@/lib/useSwipe";
 import PeriodPicker from "@/components/calendar/PeriodPicker";
 import ClockWeatherWidget from "@/components/ClockWeatherWidget";
+import AccountSidebar from "@/components/AccountSidebar";
 
 type Account = {
   id: string;
@@ -41,6 +42,7 @@ export default function CalendarBoard() {
     | { mode: "new"; initialRange?: EventInitialRange };
   const [dialogState, setDialogState] = useState<DialogState | null>(null);
   const [activeAccountIds, setActiveAccountIds] = useState<Set<string> | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const { start, end } = useMemo(
     () => getRangeForView(view, cursorDate),
@@ -130,18 +132,27 @@ export default function CalendarBoard() {
   return (
     <section className="flex h-full min-h-0 flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-semibold">Kalendarz rodzinny</h1>
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Otwórz panel kalendarzy"
+          className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+        >
+          <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none">
+            <path
+              d="M4 6h16M4 12h16M4 18h16"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
+        <div className="flex h-full items-center justify-center rounded-2xl border border-gray-200 bg-white px-8 py-4">
+          <h1 className="text-3xl font-semibold whitespace-nowrap">Kalendarz Gruszków 🍐</h1>
+        </div>
         <div className="min-w-64 flex-1">
           <ClockWeatherWidget />
         </div>
-        <button
-          onClick={() => setDialogState({ mode: "new" })}
-          disabled={accounts.length === 0}
-          suppressHydrationWarning
-          className="rounded-full bg-blue-600 px-6 py-3 text-lg font-medium text-white shadow hover:bg-blue-700 disabled:opacity-40"
-        >
-          + Nowe wydarzenie
-        </button>
       </div>
 
       {accounts.length === 0 && !loading && (
@@ -155,32 +166,6 @@ export default function CalendarBoard() {
       )}
 
       {error && <p className="rounded-lg bg-red-100 p-4 text-red-900">{error}</p>}
-
-      <div className="flex gap-3 flex-wrap">
-        {accounts.map((a, i) => {
-          const isActive = activeAccountIds === null || activeAccountIds.has(a.id);
-          return (
-            <button
-              key={a.id}
-              onClick={() => toggleAccount(a.id)}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-                isActive
-                  ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                  : "bg-gray-50 text-gray-400 hover:bg-gray-100"
-              }`}
-            >
-              <span
-                className="h-3 w-3 rounded-full"
-                style={{
-                  background: ["#2563eb", "#db2777", "#16a34a", "#ea580c"][i % 4],
-                  opacity: isActive ? 1 : 0.35,
-                }}
-              />
-              {a.name ?? a.email}
-            </button>
-          );
-        })}
-      </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white p-3">
         <div className="flex items-center gap-2">
@@ -281,6 +266,14 @@ export default function CalendarBoard() {
           setDialogState(null);
           load();
         }}
+      />
+
+      <AccountSidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        accounts={accounts}
+        activeAccountIds={activeAccountIds}
+        onToggleAccount={toggleAccount}
       />
     </section>
   );

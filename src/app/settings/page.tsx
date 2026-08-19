@@ -2,6 +2,7 @@ import { auth, signIn, signOut } from "@/auth";
 import { getLinkedGoogleAccounts } from "@/lib/google";
 import Link from "next/link";
 import WeatherLocationSettingsLoader from "@/components/WeatherLocationSettingsLoader";
+import AccountPhotoUpload from "@/components/AccountPhotoUpload";
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -29,14 +30,22 @@ export default async function SettingsPage() {
               key={a.id}
               className="flex items-center gap-3 rounded-xl border border-gray-200 p-3"
             >
-              {a.user.image && (
+              {(a.user.customImage ?? a.user.image) && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={a.user.image} alt="" className="h-10 w-10 rounded-full" />
+                <img
+                  src={a.user.customImage ?? a.user.image ?? undefined}
+                  alt=""
+                  className="h-10 w-10 rounded-full object-cover"
+                />
               )}
               <div className="flex-1">
                 <p className="font-medium">{a.user.name}</p>
                 <p className="text-sm text-gray-500">{a.user.email}</p>
               </div>
+              <AccountPhotoUpload
+                accountId={a.id}
+                hasCustomImage={Boolean(a.user.customImage)}
+              />
             </li>
           ))}
           {linkedAccounts.length === 0 && (
