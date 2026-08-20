@@ -57,7 +57,7 @@ const THEME_INIT_SCRIPT = `
 
 export default function Document() {
   return (
-    <Html lang="pl" className="h-full antialiased">
+    <Html lang="pl" className="antialiased">
       <Head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </Head>
