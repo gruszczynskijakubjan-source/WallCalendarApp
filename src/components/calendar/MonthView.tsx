@@ -152,7 +152,7 @@ export default function MonthView({
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="flex min-w-0 items-center space-x-1 overflow-hidden rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                    className="flex min-w-0 items-center space-x-1 overflow-hidden rounded px-1 py-0.5 text-left text-[0.6875rem] leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                   >
                     {event.ownerImage && (
@@ -169,7 +169,7 @@ export default function MonthView({
                 {overflow > 0 && (
                   <button
                     onClick={() => onSelectDay(day)}
-                    className="text-left text-[11px] text-foreground/40 hover:underline"
+                    className="text-left text-[0.6875rem] text-foreground/40 hover:underline"
                   >
                     +{overflow} więcej
                   </button>

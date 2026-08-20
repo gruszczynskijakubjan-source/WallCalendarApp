@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <ScaledViewport>
       {(portrait) => (
-        <main className="flex h-full w-full flex-col space-y-3 p-4">
+        <main className="flex h-screen w-screen flex-col space-y-3 overflow-hidden p-4">
           <EventReminders />
           <div
             className="grid min-h-0 flex-1 gap-3"

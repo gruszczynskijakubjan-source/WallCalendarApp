@@ -86,7 +86,7 @@ export default function ThemeParticles() {
         return (
           <span
             key={i}
-            className="absolute top-[-10px] leading-none select-none"
+            className="absolute top-[-0.625rem] leading-none select-none"
             style={{
               left: `${particle.left}%`,
               fontSize: particle.size,

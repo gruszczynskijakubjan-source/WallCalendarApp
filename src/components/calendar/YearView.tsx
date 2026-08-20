@@ -40,7 +40,7 @@ function MiniMonth({
       <h3 className="mb-1 text-center text-sm font-semibold capitalize text-foreground">
         {format(month, "LLLL", { locale: pl })}
       </h3>
-      <div className="grid grid-cols-7 gap-y-0.5 text-center text-[10px] text-foreground/40">
+      <div className="grid grid-cols-7 gap-y-0.5 text-center text-[0.625rem] text-foreground/40">
         {WEEKDAY_LABELS.map((label, i) => (
           <div key={`${label}-${i}`}>{label}</div>
         ))}
@@ -50,7 +50,7 @@ function MiniMonth({
             <button
               key={day.toISOString()}
               onClick={() => onSelectDay(day)}
-              className={`relative mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[11px] hover:bg-surface-muted ${
+              className={`relative mx-auto flex h-6 w-6 items-center justify-center rounded-full text-[0.6875rem] hover:bg-surface-muted ${
                 isSameMonth(day, month) ? "text-foreground" : "text-foreground/30"
               } ${isToday(day) ? "bg-accent-coral font-semibold text-white hover:bg-accent-coral" : ""}`}
             >

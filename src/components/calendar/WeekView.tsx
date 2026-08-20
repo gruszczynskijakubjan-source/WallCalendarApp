@@ -17,13 +17,10 @@ import type { EventInitialRange } from "@/components/EventDialog";
 import { useTimeGridSelection } from "@/lib/useTimeGridSelection";
 import { useForecastByDate, forecastKey } from "@/lib/useForecast";
 import { weatherIcon } from "@/lib/weatherIcon";
+import { HOUR_HEIGHT_PX, SLOT_MINUTES, SLOT_HEIGHT_PX } from "@/lib/calendarLayout";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const HOUR_HEIGHT_PX = 64;
-const SLOTS_PER_HOUR = 2;
-const SLOT_MINUTES = 60 / SLOTS_PER_HOUR;
-const SLOT_HEIGHT_PX = HOUR_HEIGHT_PX / SLOTS_PER_HOUR;
-const TOTAL_SLOTS = HOURS.length * SLOTS_PER_HOUR;
+const TOTAL_SLOTS = HOURS.length * (60 / SLOT_MINUTES);
 
 function slotToDate(day: Date, slot: number) {
   const base = new Date(day.getFullYear(), day.getMonth(), day.getDate());
@@ -200,7 +197,7 @@ export default function WeekView({
                         <button
                           key={event.id}
                           onClick={() => onSelectEvent(event)}
-                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center space-x-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center space-x-1 truncate rounded px-1 py-0.5 text-left text-[0.6875rem] leading-tight text-white hover:brightness-95"
                           style={{ background: event.ownerColor }}
                           title={event.summary}
                         >
