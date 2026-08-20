@@ -49,7 +49,7 @@ export default function WeekView({
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: weekStart, end: addDays(weekStart, 6) });
 
-  const { selection, startSelection, extendSelection, endSelection, cancelSelection } =
+  const { selection, armed, startSelection, extendSelection, endSelection, cancelSelection } =
     useTimeGridSelection((sel) => {
       const minSlot = Math.min(sel.startSlot, sel.endSlot);
       const maxSlot = Math.max(sel.startSlot, sel.endSlot) + 1;
@@ -63,8 +63,11 @@ export default function WeekView({
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({
-      top: (now.getHours() / 24) * HOUR_HEIGHT_PX * 24 - HOUR_HEIGHT_PX * 2,
+    const offsetMinutes = now.getHours() * 60 + now.getMinutes();
+    const container = scrollRef.current;
+    const viewportHeight = container?.clientHeight ?? HOUR_HEIGHT_PX * 4;
+    container?.scrollTo({
+      top: (offsetMinutes / 60) * HOUR_HEIGHT_PX - viewportHeight / 2,
       behavior: "instant",
     });
     // Only re-scroll when the displayed week changes, not on every clock tick.
@@ -167,18 +170,12 @@ export default function WeekView({
             return (
               <div
                 key={day.toISOString()}
-                className="relative touch-none border-l border-border select-none"
+                className={`relative border-l border-border select-none ${armed ? "touch-none" : ""}`}
                 onPointerDown={(e) => {
                   if ((e.target as HTMLElement).closest("button")) return;
                   const rect = e.currentTarget.getBoundingClientRect();
                   const slot = Math.floor((e.clientY - rect.top) / SLOT_HEIGHT_PX);
-                  startSelection(dayIndex, slot);
-                  // Safari 12 (iPadOS 12.5.x) has no Pointer Events API at
-                  // all — setPointerCapture doesn't exist there. It's an
-                  // enhancement (keeps drag-selection tracking the element
-                  // under a fast swipe), not a requirement, so just skip it
-                  // when unavailable.
-                  e.currentTarget.setPointerCapture?.(e.pointerId);
+                  startSelection(dayIndex, slot, { x: e.clientX, y: e.clientY });
                 }}
                 onPointerMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -186,7 +183,7 @@ export default function WeekView({
                     TOTAL_SLOTS - 1,
                     Math.max(0, Math.floor((e.clientY - rect.top) / SLOT_HEIGHT_PX)),
                   );
-                  extendSelection(dayIndex, slot);
+                  extendSelection(dayIndex, slot, { x: e.clientX, y: e.clientY });
                 }}
                 onPointerUp={endSelection}
                 onPointerCancel={cancelSelection}
