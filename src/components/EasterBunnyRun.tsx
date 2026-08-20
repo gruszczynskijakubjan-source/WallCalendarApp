@@ -113,7 +113,7 @@ export default function EasterBunnyRun() {
         </span>
       ))}
       <div
-        className="absolute bottom-0"
+        className="absolute bottom-0 left-0"
         style={{
           animation: `bunny-run ${RUN_DURATION_MS}ms linear forwards`,
         }}
@@ -138,8 +138,8 @@ export default function EasterBunnyRun() {
       </div>
       <style>{`
         @keyframes bunny-run {
-          from { left: -5%; }
-          to { left: 100%; }
+          from { transform: translateX(-5vw); }
+          to { transform: translateX(105vw); }
         }
         @keyframes bunny-hop {
           0%, 100% { transform: translateY(0); }
