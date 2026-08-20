@@ -173,7 +173,12 @@ export default function WeekView({
                   const rect = e.currentTarget.getBoundingClientRect();
                   const slot = Math.floor((e.clientY - rect.top) / SLOT_HEIGHT_PX);
                   startSelection(dayIndex, slot);
-                  e.currentTarget.setPointerCapture(e.pointerId);
+                  // Safari 12 (iPadOS 12.5.x) has no Pointer Events API at
+                  // all — setPointerCapture doesn't exist there. It's an
+                  // enhancement (keeps drag-selection tracking the element
+                  // under a fast swipe), not a requirement, so just skip it
+                  // when unavailable.
+                  e.currentTarget.setPointerCapture?.(e.pointerId);
                 }}
                 onPointerMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
