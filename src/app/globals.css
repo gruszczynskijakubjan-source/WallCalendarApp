@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Autumn (default) — warm, family-friendly neutrals. */
 :root,
@@ -14,6 +16,11 @@
   --accent-teal: #3f9c93;
   --accent-gold: #e0a52c;
   --accent-plum: #a5698a;
+
+  /* Precomputed color-mix(in srgb, var(--accent-X) N%, transparent)
+     equivalents — Safari 12 has no color-mix(), so each theme's radial-
+     gradient glow color is baked in ahead of time instead. */
+  --accent-gold-glow-12: #e0a52c1f;
 }
 
 /* Winter — cool, calm blues with a frosty feel. */
@@ -29,6 +36,8 @@
   --accent-teal: #2f8fae;
   --accent-gold: #c9a24a;
   --accent-plum: #6f7fb0;
+
+  --accent-teal-glow-10: #2f8fae1a;
 }
 
 /* Spring — fresh greens and soft blossom pink. */
@@ -44,6 +53,8 @@
   --accent-teal: #5aa07a;
   --accent-gold: #d9b23c;
   --accent-plum: #b17bb5;
+
+  --accent-plum-glow-10: #b17bb51a;
 }
 
 /* Summer — bright, sunny warmth. */
@@ -59,6 +70,8 @@
   --accent-teal: #2c9a8f;
   --accent-gold: #e8a622;
   --accent-plum: #c26b8f;
+
+  --accent-gold-glow-16: #e8a62229;
 }
 
 /* Christmas — cool icy blues and silver, with red/gold accents. */
@@ -74,6 +87,9 @@
   --accent-teal: #2f7fa6;
   --accent-gold: #d4a017;
   --accent-plum: #5a4a7a;
+
+  --accent-teal-glow-12: #2f7fa61f;
+  --accent-coral-glow-8: #c23b3b14;
 }
 
 /* New Year's Eve — near-black with gold sparkle. */
@@ -89,6 +105,8 @@
   --accent-teal: #4fd1c5;
   --accent-gold: #f5c542;
   --accent-plum: #b98ee0;
+
+  --accent-gold-glow-14: #f5c54224;
 }
 
 /* Valentine's — soft blush pinks and reds. */
@@ -104,6 +122,8 @@
   --accent-teal: #4f9c94;
   --accent-gold: #e2a13a;
   --accent-plum: #b4547e;
+
+  --accent-coral-glow-14: #e0455f24;
 }
 
 /* Easter — pastel spring egg colours. */
@@ -119,6 +139,8 @@
   --accent-teal: #79b6a0;
   --accent-gold: #e8c85a;
   --accent-plum: #b48ad1;
+
+  --accent-teal-glow-10: #79b6a01a;
 }
 
 /* Majówka — bright red-and-white with fresh green (Polish flag long weekend). */
@@ -134,20 +156,8 @@
   --accent-teal: #3f9c67;
   --accent-gold: #e0b429;
   --accent-plum: #8a6bab;
-}
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-  --color-border: var(--border);
-  --color-accent-coral: var(--accent-coral);
-  --color-accent-teal: var(--accent-teal);
-  --color-accent-gold: var(--accent-gold);
-  --color-accent-plum: var(--accent-plum);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --accent-coral-glow-6: #dc26260f;
 }
 
 body {
@@ -160,31 +170,34 @@ body {
 }
 
 /* Subtle per-theme background flavour — a soft radial glow so each theme
-   feels distinct even before any particle animation kicks in. */
+   feels distinct even before any particle animation kicks in. Each glow
+   color below is a precomputed color-mix(in srgb, var(--accent-X) N%,
+   transparent) equivalent (Safari 12 has no color-mix() support), defined
+   per theme block above. */
 :root[data-theme="winter"] body {
   background:
-    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--accent-teal) 10%, transparent), transparent 55%),
+    radial-gradient(circle at 15% 0%, var(--accent-teal-glow-10), transparent 55%),
     var(--background);
 }
 :root[data-theme="autumn"] body {
   background:
-    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-gold) 12%, transparent), transparent 55%),
+    radial-gradient(circle at 85% 0%, var(--accent-gold-glow-12), transparent 55%),
     var(--background);
 }
 :root[data-theme="spring"] body {
   background:
-    radial-gradient(circle at 15% 100%, color-mix(in srgb, var(--accent-plum) 10%, transparent), transparent 55%),
+    radial-gradient(circle at 15% 100%, var(--accent-plum-glow-10), transparent 55%),
     var(--background);
 }
 :root[data-theme="summer"] body {
   background:
-    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-gold) 16%, transparent), transparent 60%),
+    radial-gradient(circle at 85% 0%, var(--accent-gold-glow-16), transparent 60%),
     var(--background);
 }
 :root[data-theme="christmas"] body {
   background:
-    radial-gradient(circle at 10% 0%, color-mix(in srgb, var(--accent-teal) 12%, transparent), transparent 50%),
-    radial-gradient(circle at 90% 100%, color-mix(in srgb, var(--accent-coral) 8%, transparent), transparent 50%),
+    radial-gradient(circle at 10% 0%, var(--accent-teal-glow-12), transparent 50%),
+    radial-gradient(circle at 90% 100%, var(--accent-coral-glow-8), transparent 50%),
     var(--background);
 }
 :root[data-theme="newyear"] body {
@@ -195,30 +208,30 @@ body {
     radial-gradient(1px 1px at 70% 55%, #ffffff55, transparent),
     radial-gradient(1px 1px at 90% 30%, #ffffff88, transparent),
     radial-gradient(1px 1px at 45% 90%, #ffffff44, transparent),
-    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--accent-gold) 14%, transparent), transparent 60%),
+    radial-gradient(circle at 50% 0%, var(--accent-gold-glow-14), transparent 60%),
     var(--background);
 }
 :root[data-theme="valentines"] body {
   background:
-    radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--accent-coral) 14%, transparent), transparent 55%),
+    radial-gradient(circle at 20% 0%, var(--accent-coral-glow-14), transparent 55%),
     var(--background);
 }
 :root[data-theme="easter"] body {
   background:
-    radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--accent-teal) 10%, transparent), transparent 55%),
+    radial-gradient(circle at 85% 0%, var(--accent-teal-glow-10), transparent 55%),
     var(--background);
 }
 :root[data-theme="mayday"] body {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--accent-coral) 6%, transparent) 0%, transparent 12%),
+    linear-gradient(180deg, var(--accent-coral-glow-6) 0%, transparent 12%),
     var(--background);
 }
 
 
 @keyframes heartbeat {
-  0%, 100% { scale: 1; }
-  15% { scale: 1.08; }
-  30% { scale: 1; }
-  45% { scale: 1.08; }
-  60% { scale: 1; }
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.08); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.08); }
+  60% { transform: scale(1); }
 }

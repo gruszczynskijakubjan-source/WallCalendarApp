@@ -70,28 +70,38 @@ export default function ThemeParticles() {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {particles.map((particle, i) => (
-        <span
-          key={i}
-          className="absolute top-[-10px] leading-none select-none"
-          style={{
-            left: `${particle.left}%`,
-            fontSize: particle.size,
-            opacity: particle.opacity,
-            animation: `theme-particle-${i % 2 === 0 ? "a" : "b"} ${particle.duration}s linear infinite${
-              particle.spin ? `, theme-particle-spin ${particle.duration * 0.6}s linear infinite` : ""
-            }${
-              particle.sway
-                ? `, theme-particle-sway ${(particle.duration * 0.35).toFixed(2)}s ease-in-out infinite`
-                : ""
-            }`,
-            animationDelay: `${particle.delay}s`,
-            ["--drift" as string]: `${particle.drift}px`,
-          }}
-        >
-          {particle.glyph}
-        </span>
-      ))}
+      {particles.map((particle, i) => {
+        // Safari 12 has no standalone `rotate`/`scale` CSS properties, so any
+        // rotation must ride the same `transform:` value as the fall/drift
+        // animation rather than run as a second, independent animation.
+        const variant = i % 2 === 0 ? "a" : "b";
+        const fallKeyframe = particle.spin
+          ? `theme-particle-${variant}-spin`
+          : particle.sway
+            ? `theme-particle-${variant}-sway`
+            : `theme-particle-${variant}`;
+        const spinDuration = particle.duration * 0.6;
+        const swayDuration = particle.duration * 0.35;
+
+        return (
+          <span
+            key={i}
+            className="absolute top-[-10px] leading-none select-none"
+            style={{
+              left: `${particle.left}%`,
+              fontSize: particle.size,
+              opacity: particle.opacity,
+              animation: `${fallKeyframe} ${particle.duration}s linear infinite`,
+              animationDelay: `${particle.delay}s`,
+              ["--drift" as string]: `${particle.drift}px`,
+              ["--spin-duration" as string]: `${spinDuration}s`,
+              ["--sway-duration" as string]: `${swayDuration}s`,
+            }}
+          >
+            {particle.glyph}
+          </span>
+        );
+      })}
       <style>{`
         @keyframes theme-particle-a {
           0% { transform: translate(0, -10px); }
@@ -103,13 +113,29 @@ export default function ThemeParticles() {
           50% { transform: translate(calc(var(--drift) * -1), 50vh); }
           100% { transform: translate(0, 100vh); }
         }
-        @keyframes theme-particle-spin {
-          from { rotate: 0deg; }
-          to { rotate: 360deg; }
+        @keyframes theme-particle-a-spin {
+          0% { transform: translate(0, -10px) rotate(0deg); }
+          50% { transform: translate(var(--drift), 50vh) rotate(180deg); }
+          100% { transform: translate(0, 100vh) rotate(360deg); }
         }
-        @keyframes theme-particle-sway {
-          0%, 100% { rotate: -12deg; }
-          50% { rotate: 12deg; }
+        @keyframes theme-particle-b-spin {
+          0% { transform: translate(0, -10px) rotate(0deg); }
+          50% { transform: translate(calc(var(--drift) * -1), 50vh) rotate(180deg); }
+          100% { transform: translate(0, 100vh) rotate(360deg); }
+        }
+        @keyframes theme-particle-a-sway {
+          0% { transform: translate(0, -10px) rotate(-12deg); }
+          25% { transform: translate(calc(var(--drift) * 0.5), 25vh) rotate(12deg); }
+          50% { transform: translate(var(--drift), 50vh) rotate(-12deg); }
+          75% { transform: translate(calc(var(--drift) * 0.5), 75vh) rotate(12deg); }
+          100% { transform: translate(0, 100vh) rotate(-12deg); }
+        }
+        @keyframes theme-particle-b-sway {
+          0% { transform: translate(0, -10px) rotate(-12deg); }
+          25% { transform: translate(calc(var(--drift) * -0.5), 25vh) rotate(12deg); }
+          50% { transform: translate(calc(var(--drift) * -1), 50vh) rotate(-12deg); }
+          75% { transform: translate(calc(var(--drift) * -0.5), 75vh) rotate(12deg); }
+          100% { transform: translate(0, 100vh) rotate(-12deg); }
         }
       `}</style>
     </div>

@@ -28,6 +28,7 @@
     "@types/react-dom": "17.0.26",
     "eslint": "^8",
     "eslint-config-next": "12.3.4",
+    "flex-gap-polyfill": "^5.0.0",
     "typescript": "^5"
   }
 }

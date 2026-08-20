@@ -49,23 +49,28 @@ export default function SpringGrass({ themes }: { themes: string }) {
             left: `${blade.left}%`,
             width: 3,
             height: blade.height,
-            rotate: `${blade.tilt}deg`,
-            transform: "scaleY(0)",
+            transform: `rotate(${blade.tilt}deg) scaleY(0)`,
             animation:
               "spring-grass-grow 1.1s ease-out forwards, spring-grass-sway 3.5s ease-in-out infinite",
             animationDelay: `${blade.delay}s, ${blade.delay + 1.1}s`,
             opacity: 0.55,
+            // Custom property carries the blade's fixed tilt so the two
+            // animations below can each layer their own transform on top of
+            // it without clobbering one another (Safari 12 has no standalone
+            // `rotate`/`scale` CSS properties, so both must ride one
+            // `transform` value per keyframe step).
+            ["--tilt" as string]: `${blade.tilt}deg`,
           }}
         />
       ))}
       <style>{`
         @keyframes spring-grass-grow {
-          from { transform: scaleY(0); }
-          to { transform: scaleY(1); }
+          from { transform: rotate(var(--tilt)) scaleY(0); }
+          to { transform: rotate(var(--tilt)) scaleY(1); }
         }
         @keyframes spring-grass-sway {
-          0%, 100% { rotate: -4deg; }
-          50% { rotate: 4deg; }
+          0%, 100% { transform: rotate(calc(var(--tilt) - 4deg)) scaleY(1); }
+          50% { transform: rotate(calc(var(--tilt) + 4deg)) scaleY(1); }
         }
       `}</style>
     </div>
