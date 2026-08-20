@@ -122,7 +122,7 @@ export default function MonthView({
             >
               <button
                 onClick={() => onSelectDay(day)}
-                className="mb-1 flex min-w-0 items-center justify-between gap-0.5 rounded-lg text-left hover:bg-surface-muted"
+                className="mb-1 flex min-w-0 items-center justify-between space-x-0.5 rounded-lg text-left hover:bg-surface-muted"
               >
                 <span
                   className={`inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm ${
@@ -137,7 +137,7 @@ export default function MonthView({
                 </span>
                 {dayForecast && (
                   <span
-                    className="flex min-w-0 items-center gap-1 overflow-hidden pr-1 text-sm font-medium text-foreground/70"
+                    className="flex min-w-0 items-center space-x-1 overflow-hidden pr-1 text-sm font-medium text-foreground/70"
                     title={`Min ${Math.round(dayForecast.tempMinC)}° / Maks ${Math.round(dayForecast.tempMaxC)}°`}
                   >
                     <span className="shrink-0 text-base leading-none">
@@ -147,12 +147,12 @@ export default function MonthView({
                   </span>
                 )}
               </button>
-              <span className="flex min-w-0 flex-col gap-0.5 overflow-hidden">
+              <span className="flex min-w-0 flex-col space-y-0.5 overflow-hidden">
                 {visible.map((event) => (
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="flex min-w-0 items-center gap-1 overflow-hidden rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                    className="flex min-w-0 items-center space-x-1 overflow-hidden rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                   >
                     {event.ownerImage && (

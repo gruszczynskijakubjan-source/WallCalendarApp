@@ -238,8 +238,8 @@ export default function CalendarBoard() {
 
 
   return (
-    <section className="flex h-full min-h-0 flex-col gap-2.5">
-      <div className="flex items-center gap-2">
+    <section className="flex h-full min-h-0 flex-col space-y-2.5">
+      <div className="flex items-center space-x-2">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
@@ -288,8 +288,9 @@ export default function CalendarBoard() {
         <p className="rounded-2xl bg-accent-coral/15 p-4 text-accent-coral">{error}</p>
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-surface p-2 shadow-sm">
-        <div className="flex items-center gap-1">
+      {/* TODO: flex-wrap + gap has no exact Safari 12 equivalent via space-x/y; verify visually */}
+      <div className="flex flex-wrap items-center justify-between space-x-2 rounded-2xl border border-border bg-surface p-2 shadow-sm">
+        <div className="flex items-center space-x-1">
           <button
             onClick={() => navigate(-1)}
             aria-label="Wstecz"

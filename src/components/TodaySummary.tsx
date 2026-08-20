@@ -22,15 +22,15 @@ export default function TodaySummary() {
   if (!data) return null;
 
   return (
-    <div className="flex shrink-0 flex-col gap-1.5 rounded-2xl border border-border bg-surface p-3 shadow-sm">
+    <div className="flex shrink-0 flex-col space-y-1.5 rounded-2xl border border-border bg-surface p-3 shadow-sm">
       <h2 className="text-sm font-semibold">Dziś w skrócie</h2>
 
       {data.events.length === 0 ? (
         <p className="text-xs text-foreground/50">Brak wydarzeń na dziś.</p>
       ) : (
-        <ul className="flex flex-col gap-1">
+        <ul className="flex flex-col space-y-1">
           {data.events.map((e) => (
-            <li key={e.id} className="flex items-center gap-2 text-xs">
+            <li key={e.id} className="flex items-center space-x-2 text-xs">
               <span className="w-10 shrink-0 text-foreground/50 tabular-nums">
                 {e.allDay ? "Cały dz." : e.start ? format(parseISO(e.start), "HH:mm") : ""}
               </span>
@@ -64,9 +64,9 @@ export function TodaySummaryOverlay() {
       {visibleEvents.length === 0 ? (
         <p className="mt-1 text-sm text-white/60">Brak wydarzeń na dziś.</p>
       ) : (
-        <ul className="mt-1 flex flex-col gap-1">
+        <ul className="mt-1 flex flex-col space-y-1">
           {visibleEvents.map((e) => (
-            <li key={e.id} className="flex items-center gap-2 text-sm">
+            <li key={e.id} className="flex items-center space-x-2 text-sm">
               <span className="w-12 shrink-0 text-white/50 tabular-nums">
                 {e.allDay ? "Cały dz." : e.start ? format(parseISO(e.start), "HH:mm") : ""}
               </span>

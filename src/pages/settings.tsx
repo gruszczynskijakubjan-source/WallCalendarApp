@@ -18,7 +18,7 @@ type LinkedAccount = {
     name: string | null;
     email: string | null;
     image: string | null;
-    customImage: string | null;
+    hasCustomImage: boolean;
   };
 };
 
@@ -42,8 +42,12 @@ export const getServerSideProps: GetServerSideProps<SettingsPageProps> = async (
         user: {
           name: a.user.name,
           email: a.user.email,
-          image: a.user.image,
-          customImage: a.user.customImage,
+          // Custom uploads are stored as base64 in the DB and can be several
+          // MB — serving them through /photo-file instead of inlining the
+          // data URL here keeps this page's initial payload small (this was
+          // previously 13MB+, large enough to crash low-memory devices).
+          image: a.user.customImage ? `/api/accounts/${a.id}/photo-file` : a.user.image,
+          hasCustomImage: Boolean(a.user.customImage),
         },
       })),
     },
@@ -56,7 +60,7 @@ export default function SettingsPage({
   linkedAccounts,
 }: SettingsPageProps) {
   return (
-    <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 p-6">
+    <main className="mx-auto flex min-h-screen max-w-2xl flex-col space-y-8 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-semibold">Ustawienia</h1>
         <Link href="/" className="text-accent-teal hover:underline">
@@ -64,23 +68,23 @@ export default function SettingsPage({
         </Link>
       </div>
 
-      <section className="flex flex-col gap-3">
+      <section className="flex flex-col space-y-3">
         <h2 className="text-xl font-semibold">Połączone konta Google</h2>
         <p className="text-foreground/50">
           Każdy domownik loguje się tutaj raz, żeby jego kalendarz i zadania Google
           pojawiły się na wspólnym ekranie.
         </p>
 
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col space-y-2">
           {linkedAccounts.map((a) => (
             <li
               key={a.id}
-              className="flex items-center gap-3 rounded-xl border border-border p-3"
+              className="flex items-center space-x-3 rounded-xl border border-border p-3"
             >
-              {(a.user.customImage ?? a.user.image) && (
+              {a.user.image && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={a.user.customImage ?? a.user.image ?? undefined}
+                  src={a.user.image}
                   alt=""
                   className="h-10 w-10 rounded-full object-cover"
                 />
@@ -91,7 +95,7 @@ export default function SettingsPage({
               </div>
               <AccountPhotoUpload
                 accountId={a.id}
-                hasCustomImage={Boolean(a.user.customImage)}
+                hasCustomImage={a.user.hasCustomImage}
               />
             </li>
           ))}
@@ -134,7 +138,7 @@ export default function SettingsPage({
         </p>
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">Motyw</h2>
         <p className="text-foreground/50">
           Domyślnie dopasowuje się do aktualnej pory roku, ale możesz go zmienić
@@ -143,7 +147,7 @@ export default function SettingsPage({
         <ThemeSwitcherLoader />
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">Pogoda</h2>
         <p className="text-foreground/50">
           Widget pogody nad kalendarzem domyślnie pokazuje lokalizację skonfigurowaną
@@ -153,7 +157,7 @@ export default function SettingsPage({
         <WeatherLocationSettingsLoader />
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">Powiadomienia</h2>
         <p className="text-foreground/50">
           Wyskakujące przypomnienie na tym urządzeniu 15 minut przed każdym wydarzeniem
@@ -162,7 +166,7 @@ export default function SettingsPage({
         <NotificationSettingsLoader />
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">Ramka cyfrowa</h2>
         <p className="text-foreground/50">
           Dodaj zdjęcia rodzinne, żeby móc uruchomić pełnoekranowy pokaz slajdów
@@ -171,7 +175,7 @@ export default function SettingsPage({
         <PhotoManager />
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">Trello — lista zakupów</h2>
         <p className="text-foreground/50">
           Połącz konto Trello i wskaż tablicę oraz listę, która ma pojawić się jako
@@ -180,7 +184,7 @@ export default function SettingsPage({
         <TrelloSettings />
       </section>
 
-      <section className="flex flex-col gap-3 border-t border-border pt-6">
+      <section className="flex flex-col space-y-3 border-t border-border pt-6">
         <h2 className="text-xl font-semibold">eWeLink — inteligentny dom</h2>
         <p className="text-foreground/50">
           Połącz konto eWeLink (Sonoff), żeby zobaczyć i sterować swoimi urządzeniami

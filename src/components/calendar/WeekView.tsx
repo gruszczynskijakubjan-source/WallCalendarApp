@@ -85,7 +85,7 @@ export default function WeekView({
             <button
               key={day.toISOString()}
               onClick={() => onSelectDay(day)}
-              className="flex flex-col items-center gap-0.5 rounded-lg py-1 hover:bg-surface-muted"
+              className="flex flex-col items-center space-y-0.5 rounded-lg py-1 hover:bg-surface-muted"
             >
               <span className="text-xs font-medium text-foreground/40 capitalize">
                 {format(day, "EEE", { locale: pl })}
@@ -98,7 +98,7 @@ export default function WeekView({
                 {format(day, "d")}
               </span>
               {dayForecast && (
-                <span className="flex items-center gap-0.5 text-xs text-foreground/60">
+                <span className="flex items-center space-x-0.5 text-xs text-foreground/60">
                   <span className="leading-none">{weatherIcon(dayForecast.weatherCode)}</span>
                   {Math.round(dayForecast.tempMaxC)}°
                 </span>
@@ -118,12 +118,12 @@ export default function WeekView({
               (e) => e.allDay && e.start && isSameDay(parseISO(e.start), day),
             );
             return (
-              <div key={day.toISOString()} className="flex min-w-0 flex-col gap-1 px-1">
+              <div key={day.toISOString()} className="flex min-w-0 flex-col space-y-1 px-1">
                 {allDayEvents.map((event) => (
                   <button
                     key={event.id}
                     onClick={() => onSelectEvent(event)}
-                    className="flex min-w-0 items-center gap-1.5 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
+                    className="flex min-w-0 items-center space-x-1.5 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white hover:brightness-95"
                     style={{ background: event.ownerColor }}
                     title={event.summary}
                   >
@@ -198,7 +198,7 @@ export default function WeekView({
                         <button
                           key={event.id}
                           onClick={() => onSelectEvent(event)}
-                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center space-x-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
                           style={{ background: event.ownerColor }}
                           title={event.summary}
                         >

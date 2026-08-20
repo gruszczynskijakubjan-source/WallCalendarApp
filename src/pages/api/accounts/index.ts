@@ -13,7 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       id: a.id,
       name: a.user.name,
       email: a.user.email,
-      image: a.user.customImage ?? a.user.image,
+      // Custom uploads are stored as base64 in the DB and can be several MB
+      // — serve them through a dedicated image endpoint (cacheable, and not
+      // duplicated inline in this JSON payload) instead of the raw data URL.
+      image: a.user.customImage ? `/api/accounts/${a.id}/photo-file` : a.user.image,
       householdRole: a.user.householdRole,
     })),
   );

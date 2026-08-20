@@ -154,7 +154,7 @@ function EventDialogForm({
   if (isReadOnly && event) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-        <div className="flex w-full max-w-lg flex-col gap-4 rounded-2xl bg-surface p-6 shadow-xl">
+        <div className="flex w-full max-w-lg flex-col space-y-4 rounded-2xl bg-surface p-6 shadow-xl">
           <h2 className="text-2xl font-semibold">{event.summary}</h2>
           <p className="text-foreground/60">
             {event.start &&
@@ -181,13 +181,13 @@ function EventDialogForm({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-xl flex flex-col gap-4"
+        className="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-xl flex flex-col space-y-4"
       >
         <h2 className="text-2xl font-semibold">
           {isEditing ? "Edytuj wydarzenie" : "Nowe wydarzenie"}
         </h2>
 
-        <label className="flex flex-col gap-1">
+        <label className="flex flex-col space-y-1">
           <span className="text-sm font-medium text-foreground/60">Kalendarz</span>
           <select
             value={accountId}
@@ -203,7 +203,7 @@ function EventDialogForm({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1">
+        <label className="flex flex-col space-y-1">
           <span className="text-sm font-medium text-foreground/60">Tytuł</span>
           <input
             required
@@ -214,7 +214,7 @@ function EventDialogForm({
           />
         </label>
 
-        <label className="flex flex-col gap-1">
+        <label className="flex flex-col space-y-1">
           <span className="text-sm font-medium text-foreground/60">Miejsce</span>
           <input
             value={form.location}
@@ -223,7 +223,7 @@ function EventDialogForm({
           />
         </label>
 
-        <label className="flex items-center gap-2">
+        <label className="flex items-center space-x-2">
           <input
             type="checkbox"
             checked={form.allDay}
@@ -233,7 +233,7 @@ function EventDialogForm({
           <span>Cały dzień</span>
         </label>
 
-        <label className="flex flex-col gap-1">
+        <label className="flex flex-col space-y-1">
           <span className="text-sm font-medium text-foreground/60">Data</span>
           <input
             type="date"
@@ -245,8 +245,8 @@ function EventDialogForm({
         </label>
 
         {!form.allDay && (
-          <div className="flex gap-3">
-            <label className="flex flex-1 flex-col gap-1">
+          <div className="flex space-x-3">
+            <label className="flex flex-1 flex-col space-y-1">
               <span className="text-sm font-medium text-foreground/60">Od</span>
               <input
                 type="time"
@@ -256,7 +256,7 @@ function EventDialogForm({
                 className="rounded-lg border border-border p-3 text-lg"
               />
             </label>
-            <label className="flex flex-1 flex-col gap-1">
+            <label className="flex flex-1 flex-col space-y-1">
               <span className="text-sm font-medium text-foreground/60">Do</span>
               <input
                 type="time"
@@ -271,7 +271,7 @@ function EventDialogForm({
 
         {error && <p className="text-accent-coral">{error}</p>}
 
-        <div className="flex items-center justify-between gap-3 pt-2">
+        <div className="flex items-center justify-between space-x-3 pt-2">
           {isEditing ? (
             <button
               type="button"
@@ -285,7 +285,7 @@ function EventDialogForm({
             <span />
           )}
 
-          <div className="flex gap-3">
+          <div className="flex space-x-3">
             <button
               type="button"
               onClick={onClose}

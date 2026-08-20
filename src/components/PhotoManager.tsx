@@ -73,7 +73,7 @@ export default function PhotoManager() {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col space-y-3">
       <button
         type="button"
         onClick={() => inputRef.current?.click()}

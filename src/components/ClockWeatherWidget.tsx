@@ -67,7 +67,7 @@ export default function ClockWeatherWidget() {
   const countdown = countdownLabel(now, theme);
 
   return (
-    <div className="flex h-full items-center justify-center gap-4 rounded-2xl border border-border bg-surface px-4 py-2.5 shadow-sm">
+    <div className="flex h-full items-center justify-center space-x-4 rounded-2xl border border-border bg-surface px-4 py-2.5 shadow-sm">
       <div className="flex-1 text-center" suppressHydrationWarning>
         <p className="text-2xl leading-none font-semibold tabular-nums">
           {format(now, "HH:mm")}
@@ -81,7 +81,7 @@ export default function ClockWeatherWidget() {
       </div>
 
       {weather && (
-        <div className="flex flex-1 items-center justify-center gap-2.5 border-l border-border pl-4">
+        <div className="flex flex-1 items-center justify-center space-x-2.5 border-l border-border pl-4">
           <span className="text-2xl" aria-hidden>
             {weatherIcon(weather.weatherCode, weather.isDay)}
           </span>

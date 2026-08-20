@@ -45,7 +45,7 @@ export default function DevicesPanel({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="flex w-full max-w-md flex-col gap-4 rounded-3xl bg-surface p-6 shadow-xl">
+      <div className="flex w-full max-w-md flex-col space-y-4 rounded-3xl bg-surface p-6 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Urządzenia domowe</h2>
           <button
@@ -73,11 +73,11 @@ export default function DevicesPanel({
         ) : devices.length === 0 ? (
           <p className="p-4 text-center text-foreground/50">Brak urządzeń na koncie.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col space-y-2">
             {devices.map((device) => (
               <li
                 key={device.id}
-                className="flex items-center gap-3 rounded-xl border border-border p-3"
+                className="flex items-center space-x-3 rounded-xl border border-border p-3"
               >
                 <span
                   className={`h-2.5 w-2.5 shrink-0 rounded-full ${

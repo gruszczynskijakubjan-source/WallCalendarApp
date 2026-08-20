@@ -117,7 +117,7 @@ export default function TodoList() {
 
   return (
     <>
-      <div className="flex shrink-0 flex-col gap-2 border-b border-border p-3">
+      <div className="flex shrink-0 flex-col space-y-2 border-b border-border p-3">
         {accounts.length === 0 && !loading && (
           <p className="rounded-lg bg-accent-gold/15 p-3 text-xs text-foreground">
             Połącz konto Google w ustawieniach, żeby zobaczyć zadania z Google Tasks.
@@ -128,8 +128,8 @@ export default function TodoList() {
           <p className="rounded-lg bg-accent-coral/15 p-3 text-xs text-accent-coral">{error}</p>
         )}
 
-        <form onSubmit={addTask} className="flex flex-col gap-2">
-          <div className="flex gap-2">
+        <form onSubmit={addTask} className="flex flex-col space-y-2">
+          <div className="flex space-x-2">
             <input
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
@@ -146,7 +146,7 @@ export default function TodoList() {
             </button>
           </div>
           {accounts.length > 1 && (
-            <div className="flex gap-2">
+            <div className="flex space-x-2">
               {accounts.map((a) => {
                 const selected = (newAccountId || accounts[0]?.id) === a.id;
                 return (
@@ -189,11 +189,11 @@ export default function TodoList() {
           <p className="p-4 text-foreground/50">Brak zadań 🎉</p>
         ) : (
           <>
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col space-y-1">
               {tasks.map((task) => (
                 <li
                   key={task.id}
-                  className="flex items-center gap-2.5 rounded-lg p-2 hover:bg-surface-muted"
+                  className="flex items-center space-x-2.5 rounded-lg p-2 hover:bg-surface-muted"
                 >
                   <button
                     type="button"

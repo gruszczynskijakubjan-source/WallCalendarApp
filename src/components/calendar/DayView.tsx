@@ -77,7 +77,7 @@ export default function DayView({
           {format(date, "EEEE, d MMMM yyyy", { locale: pl })}
         </h2>
         {dayForecast && (
-          <span className="flex items-center gap-2 rounded-full bg-surface-muted px-3 py-1.5 text-base font-medium text-foreground/70">
+          <span className="flex items-center space-x-2 rounded-full bg-surface-muted px-3 py-1.5 text-base font-medium text-foreground/70">
             <span className="text-xl leading-none">
               {weatherIcon(dayForecast.weatherCode)}
             </span>
@@ -87,12 +87,12 @@ export default function DayView({
       </div>
 
       {allDayEvents.length > 0 && (
-        <ul className="mb-2 flex shrink-0 flex-col gap-1">
+        <ul className="mb-2 flex shrink-0 flex-col space-y-1">
           {allDayEvents.map((event) => (
             <li key={event.id}>
               <button
                 onClick={() => onSelectEvent(event)}
-                className="flex w-full items-center gap-3 rounded-xl bg-surface-muted p-3 text-left hover:bg-surface-muted"
+                className="flex w-full items-center space-x-3 rounded-xl bg-surface-muted p-3 text-left hover:bg-surface-muted"
               >
                 {event.ownerImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -162,7 +162,7 @@ export default function DayView({
                     <button
                       key={event.id}
                       onClick={() => onSelectEvent(event)}
-                      className="mb-1 flex w-full items-center gap-2 rounded-lg p-2 text-left text-sm hover:brightness-95"
+                      className="mb-1 flex w-full items-center space-x-2 rounded-lg p-2 text-left text-sm hover:brightness-95"
                       style={{ background: `${event.ownerColor}1a` }}
                     >
                       {event.ownerImage ? (

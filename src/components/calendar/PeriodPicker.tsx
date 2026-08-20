@@ -128,7 +128,7 @@ function YearDropdown({
       onToggle={onToggle}
       onClose={onClose}
     >
-      <div className="flex max-h-64 flex-col gap-1 overflow-y-auto">
+      <div className="flex max-h-64 flex-col space-y-1 overflow-y-auto">
         {years.map((year) => (
           <button
             key={year}
@@ -163,7 +163,7 @@ export default function PeriodPicker({
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center space-x-1">
       {showMonth && (
         <MonthDropdown
           date={date}

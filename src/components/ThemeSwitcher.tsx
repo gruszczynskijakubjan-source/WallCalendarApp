@@ -32,13 +32,14 @@ export default function ThemeSwitcher({
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <label className="flex w-fit items-center gap-2 text-sm font-medium text-foreground/80">
+    <div className="flex flex-col space-y-3">
+      <label className="flex w-fit items-center space-x-2 text-sm font-medium text-foreground/80">
         <input type="checkbox" checked={auto} onChange={toggleAuto} className="h-4 w-4" />
         Automatyczne motywy (świąteczne i sezonowe)
       </label>
 
-      <div className="flex flex-wrap gap-2">
+      {/* TODO: flex-wrap + gap has no exact Safari 12 equivalent via space-x/y; verify visually */}
+      <div className="flex flex-wrap space-x-2">
         {THEMES.map((t) => (
           <button
             key={t}

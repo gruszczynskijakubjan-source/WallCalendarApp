@@ -59,7 +59,11 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
             id: `${account.id}:${event.id}`,
             accountId: account.id,
             ownerName: account.user.name,
-            ownerImage: account.user.customImage ?? account.user.image,
+            // See src/pages/api/accounts/index.ts for why this isn't the raw
+            // base64 data URL: it would be duplicated per event otherwise.
+            ownerImage: account.user.customImage
+              ? `/api/accounts/${account.id}/photo-file`
+              : account.user.image,
             ownerColor: overrideColor ?? calendarColor,
             summary: event.summary ?? "(bez tytułu)",
             description: event.description,

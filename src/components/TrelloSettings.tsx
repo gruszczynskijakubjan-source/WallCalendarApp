@@ -127,7 +127,7 @@ export default function TrelloSettings() {
 
   if (!config.connected) {
     return (
-      <form onSubmit={handleConnect} className="flex flex-col gap-2">
+      <form onSubmit={handleConnect} className="flex flex-col space-y-2">
         <p className="text-sm text-foreground/50">
           Klucz i token znajdziesz na{" "}
           <a
@@ -165,7 +165,7 @@ export default function TrelloSettings() {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col space-y-3">
       <div className="flex items-center justify-between rounded-xl border border-border p-3">
         <div>
           <p className="font-medium">Połączono z Trello</p>
@@ -185,7 +185,7 @@ export default function TrelloSettings() {
         </button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex space-x-2">
         <select
           value={selectedBoardId}
           onChange={(e) => {

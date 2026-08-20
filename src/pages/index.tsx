@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <ScaledViewport>
       {(portrait) => (
-        <main className="flex h-full w-full flex-col gap-3 p-4">
+        <main className="flex h-full w-full flex-col space-y-3 p-4">
           <EventReminders />
           <div
             className="grid min-h-0 flex-1 gap-3"
@@ -18,7 +18,7 @@ export default function Home() {
             }}
           >
             <CalendarBoard />
-            <div className="flex min-h-0 flex-col gap-3">
+            <div className="flex min-h-0 flex-col space-y-3">
               <TodaySummary />
               <TaskListPanel />
             </div>

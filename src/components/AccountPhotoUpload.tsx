@@ -69,8 +69,8 @@ export default function AccountPhotoUpload({
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
-      <div className="flex gap-2">
+    <div className="flex flex-col items-end space-y-1">
+      <div className="flex space-x-2">
         <button
           type="button"
           onClick={() => inputRef.current?.click()}

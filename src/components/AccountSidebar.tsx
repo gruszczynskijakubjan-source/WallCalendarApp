@@ -45,7 +45,7 @@ export default function AccountSidebar({
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-40 flex h-full w-72 flex-col gap-4 bg-surface p-4 shadow-xl transition-transform duration-200 ${
+        className={`fixed top-0 left-0 z-40 flex h-full w-72 flex-col space-y-4 bg-surface p-4 shadow-xl transition-transform duration-200 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -61,7 +61,7 @@ export default function AccountSidebar({
           </button>
         </div>
 
-        <ul className="flex flex-col gap-1">
+        <ul className="flex flex-col space-y-1">
           {accounts.map((a, i) => {
             const isActive = activeAccountIds === null || activeAccountIds.has(a.id);
             const fallbackColor = a.color ?? FALLBACK_COLORS[i % FALLBACK_COLORS.length];
@@ -70,7 +70,7 @@ export default function AccountSidebar({
                 <button
                   type="button"
                   onClick={() => onToggleAccount(a.id)}
-                  className={`flex w-full items-center gap-3 rounded-xl p-2 text-left transition ${
+                  className={`flex w-full items-center space-x-3 rounded-xl p-2 text-left transition ${
                     isActive ? "bg-surface-muted hover:bg-border" : "hover:bg-surface-muted"
                   }`}
                 >
@@ -125,14 +125,14 @@ export default function AccountSidebar({
           )}
         </ul>
 
-        <div className="mt-2 flex flex-col gap-1 border-t border-border pt-4">
+        <div className="mt-2 flex flex-col space-y-1 border-t border-border pt-4">
           <button
             type="button"
             onClick={() => {
               onClose();
               onOpenSlideshow();
             }}
-            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+            className="flex w-full items-center space-x-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
               <rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
@@ -154,7 +154,7 @@ export default function AccountSidebar({
               onClose();
               onOpenTimer();
             }}
-            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+            className="flex w-full items-center space-x-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
               <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="2" />
@@ -170,7 +170,7 @@ export default function AccountSidebar({
               onClose();
               onOpenDevices();
             }}
-            className="flex w-full items-center gap-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
+            className="flex w-full items-center space-x-3 rounded-xl p-2 text-left font-medium hover:bg-surface-muted"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
               <path

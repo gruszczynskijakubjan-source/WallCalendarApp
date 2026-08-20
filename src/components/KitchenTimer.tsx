@@ -115,7 +115,7 @@ export default function KitchenTimer({ open, onClose }: { open: boolean; onClose
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-3xl bg-surface p-8 shadow-xl">
+      <div className="flex w-full max-w-sm flex-col items-center space-y-6 rounded-3xl bg-surface p-8 shadow-xl">
         <div className="flex w-full items-center justify-between">
           <h2 className="text-xl font-semibold">Timer kuchenny</h2>
           <button
@@ -145,7 +145,8 @@ export default function KitchenTimer({ open, onClose }: { open: boolean; onClose
           <p className="text-lg font-medium text-accent-coral">⏰ Czas minął!</p>
         )}
 
-        <div className="flex flex-wrap justify-center gap-2">
+        {/* TODO: flex-wrap + gap has no exact Safari 12 equivalent via space-x/y; verify visually */}
+        <div className="flex flex-wrap justify-center space-x-2">
           {PRESETS_MIN.map((min) => (
             <button
               key={min}
@@ -160,7 +161,7 @@ export default function KitchenTimer({ open, onClose }: { open: boolean; onClose
           ))}
         </div>
 
-        <form onSubmit={applyCustom} className="flex items-center gap-2">
+        <form onSubmit={applyCustom} className="flex items-center space-x-2">
           <input
             type="number"
             min={0}
@@ -200,7 +201,7 @@ export default function KitchenTimer({ open, onClose }: { open: boolean; onClose
           </button>
         </form>
 
-        <div className="flex gap-3">
+        <div className="flex space-x-3">
           <button
             type="button"
             onClick={toggleRunning}

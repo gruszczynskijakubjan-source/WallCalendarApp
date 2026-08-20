@@ -98,12 +98,12 @@ export default function ShoppingList() {
 
   return (
     <>
-      <div className="flex shrink-0 flex-col gap-2 border-b border-border p-3">
+      <div className="flex shrink-0 flex-col space-y-2 border-b border-border p-3">
         {error && (
           <p className="rounded-lg bg-accent-coral/15 p-3 text-xs text-accent-coral">{error}</p>
         )}
 
-        <form onSubmit={addCard} className="flex gap-2">
+        <form onSubmit={addCard} className="flex space-x-2">
           <input
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
@@ -125,11 +125,11 @@ export default function ShoppingList() {
         ) : cards.length === 0 ? (
           <p className="p-3 text-sm text-foreground/50">Lista zakupów jest pusta 🛒</p>
         ) : (
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col space-y-1">
             {[...active, ...done].map((card) => (
               <li
                 key={card.id}
-                className="flex items-center gap-2.5 rounded-lg p-2 hover:bg-surface-muted"
+                className="flex items-center space-x-2.5 rounded-lg p-2 hover:bg-surface-muted"
               >
                 <button
                   type="button"
