@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import CalendarBoard from "@/components/CalendarBoard";
 import TaskListPanel from "@/components/TaskListPanel";

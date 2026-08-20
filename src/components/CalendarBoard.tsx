@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
+import Link from "next/link";
 import { addDays, addWeeks, addMonths, addYears, isToday } from "date-fns";
 import type { MergedEvent } from "@/pages/api/calendar/events";
 import EventDialog, { type EventInitialRange } from "@/components/EventDialog";
@@ -276,9 +277,9 @@ export default function CalendarBoard() {
       {accounts.length === 0 && !loading && (
         <p className="rounded-2xl bg-accent-gold/15 p-4 text-foreground">
           Nie połączono jeszcze żadnego konta Google. Przejdź do{" "}
-          <a href="/settings" className="underline font-medium">
+          <Link href="/settings" className="underline font-medium">
             ustawień
-          </a>{" "}
+          </Link>{" "}
           aby połączyć swoje konto.
         </p>
       )}

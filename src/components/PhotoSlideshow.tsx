@@ -23,7 +23,6 @@ export default function PhotoSlideshow({
   useEffect(() => {
     if (!open) return;
     // Reset to the first slide each time the slideshow is (re)opened.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIndex(0);
     fetch("/api/photos")
       .then((res) => (res.ok ? res.json() : null))

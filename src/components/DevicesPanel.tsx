@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { EweLinkDevice } from "@/pages/api/ewelink/devices";
 
 export default function DevicesPanel({
@@ -17,7 +18,6 @@ export default function DevicesPanel({
 
   useEffect(() => {
     if (!open) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     fetch("/api/ewelink/devices")
       .then((res) => (res.ok ? res.json() : null))
@@ -63,9 +63,9 @@ export default function DevicesPanel({
         ) : !connected ? (
           <p className="p-4 text-center text-sm text-foreground/50">
             Połącz konto eWeLink w{" "}
-            <a href="/settings" className="text-accent-teal underline">
+            <Link href="/settings" className="text-accent-teal underline">
               Ustawieniach
-            </a>
+            </Link>
             .
           </p>
         ) : error ? (

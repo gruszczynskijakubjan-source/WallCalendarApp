@@ -1,4 +1,7 @@
-import { auth, signIn, signOut } from "@/auth";
+import type { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth/next";
+import { getCsrfToken, signOut } from "next-auth/react";
+import { authOptions } from "@/lib/authOptions";
 import { getLinkedGoogleAccounts } from "@/lib/google";
 import Link from "next/link";
 import WeatherLocationSettingsLoader from "@/components/WeatherLocationSettingsLoader";
@@ -9,10 +12,49 @@ import NotificationSettingsLoader from "@/components/NotificationSettingsLoader"
 import TrelloSettings from "@/components/TrelloSettings";
 import EweLinkSettings from "@/components/EweLinkSettings";
 
-export default async function SettingsPage() {
-  const session = await auth();
-  const linkedAccounts = await getLinkedGoogleAccounts();
+type LinkedAccount = {
+  id: string;
+  user: {
+    name: string | null;
+    email: string | null;
+    image: string | null;
+    customImage: string | null;
+  };
+};
 
+type SettingsPageProps = {
+  session: { user?: { email?: string | null } } | null;
+  csrfToken: string | null;
+  linkedAccounts: LinkedAccount[];
+};
+
+export const getServerSideProps: GetServerSideProps<SettingsPageProps> = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  const csrfToken = (await getCsrfToken(context)) ?? null;
+  const accounts = await getLinkedGoogleAccounts();
+
+  return {
+    props: {
+      session: session ? { user: { email: session.user?.email ?? null } } : null,
+      csrfToken,
+      linkedAccounts: accounts.map((a) => ({
+        id: a.id,
+        user: {
+          name: a.user.name,
+          email: a.user.email,
+          image: a.user.image,
+          customImage: a.user.customImage,
+        },
+      })),
+    },
+  };
+};
+
+export default function SettingsPage({
+  session,
+  csrfToken,
+  linkedAccounts,
+}: SettingsPageProps) {
   return (
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 p-6">
       <div className="flex items-center justify-between">
@@ -59,12 +101,9 @@ export default async function SettingsPage() {
         </ul>
 
         {!session?.user && (
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google");
-            }}
-          >
+          <form action="/api/auth/signin/google" method="POST">
+            <input type="hidden" name="csrfToken" value={csrfToken ?? ""} />
+            <input type="hidden" name="callbackUrl" value="/settings" />
             <button
               type="submit"
               className="rounded-full bg-accent-teal px-6 py-3 text-lg font-medium text-white hover:brightness-95"
@@ -79,16 +118,13 @@ export default async function SettingsPage() {
             <p>
               Zalogowano jako <strong>{session.user.email}</strong>
             </p>
-            <form
-              action={async () => {
-                "use server";
-                await signOut();
-              }}
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/settings" })}
+              className="text-sm text-foreground/50 underline"
             >
-              <button type="submit" className="text-sm text-foreground/50 underline">
-                Wyloguj tę sesję
-              </button>
-            </form>
+              Wyloguj tę sesję
+            </button>
           </div>
         )}
 

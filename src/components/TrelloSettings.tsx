@@ -49,7 +49,6 @@ export default function TrelloSettings() {
 
   useEffect(() => {
     if (!selectedBoardId) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLists([]);
       return;
     }

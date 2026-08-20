@@ -14,7 +14,6 @@ export default function ThemeSwitcherLoader() {
   const [initialAuto, setInitialAuto] = useState(true);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialTheme(getStoredTheme());
     setInitialAuto(isAutoThemeEnabled());
   }, []);

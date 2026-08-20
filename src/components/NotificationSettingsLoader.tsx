@@ -16,7 +16,6 @@ export default function NotificationSettingsLoader() {
   useEffect(() => {
     const value =
       typeof Notification === "undefined" ? "unsupported" : Notification.permission;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialPermission(value);
   }, []);
 

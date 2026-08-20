@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import type { TrelloCard } from "@/pages/api/trello/cards";
 
 const REFRESH_INTERVAL_MS = 60_000;
@@ -87,9 +88,9 @@ export default function ShoppingList() {
     return (
       <div className="flex flex-1 items-center justify-center p-6 text-center text-sm text-foreground/50">
         Skonfiguruj Trello i wybierz listę zakupów w{" "}
-        <a href="/settings" className="ml-1 text-accent-teal underline">
+        <Link href="/settings" className="ml-1 text-accent-teal underline">
           Ustawieniach
-        </a>
+        </Link>
         .
       </div>
     );

@@ -1,31 +1,8 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import ThemeParticles from "@/components/ThemeParticles";
-import SpringGrass from "@/components/SpringGrass";
-import SummerSunGlare from "@/components/SummerSunGlare";
-import NewYearFireworks from "@/components/NewYearFireworks";
-import EasterBunnyRun from "@/components/EasterBunnyRun";
-import ChristmasGarland from "@/components/ChristmasGarland";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Kalendarz domowy",
-  description: "Wspólny kalendarz i lista zadań rodziny",
-};
+import { Html, Head, Main, NextScript } from "next/document";
 
 // Applied before hydration to avoid a flash of the wrong theme. Mirrors the
 // holiday/seasonal logic in src/lib/theme.ts — kept inline (not imported)
-// because it must run synchronously in <head>, before any JS bundle loads.
+// because it must run synchronously, before any JS bundle loads.
 const THEME_INIT_SCRIPT = `
 (function () {
   try {
@@ -78,25 +55,16 @@ const THEME_INIT_SCRIPT = `
 })();
 `;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function Document() {
   return (
-    <html
-      lang="pl"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <head>
+    <Html lang="pl" className="h-full antialiased">
+      <Head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
+      </Head>
       <body className="min-h-full flex flex-col">
-        <ThemeParticles />
-        <SpringGrass themes="spring,easter,mayday" />
-        <SummerSunGlare />
-        <NewYearFireworks />
-        <EasterBunnyRun />
-        <ChristmasGarland />
-        {children}
+        <Main />
+        <NextScript />
       </body>
-    </html>
+    </Html>
   );
 }

@@ -15,7 +15,6 @@ export default function WeatherLocationSettingsLoader() {
   useEffect(() => {
     // localStorage is only available in the browser; reading it here (once,
     // on mount) avoids a server/client hydration mismatch in the child.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialLocation(getDeviceLocation());
   }, []);
 

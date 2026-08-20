@@ -50,6 +50,8 @@ export default function EweLinkSettings() {
           Rozłącz
         </button>
       ) : (
+        /* eslint-disable-next-line @next/next/no-html-link-for-pages -- this
+           is an OAuth kickoff redirect (API route), not a Next.js page route. */
         <a
           href="/api/ewelink/connect"
           className="rounded-full bg-accent-teal px-4 py-2 text-sm font-medium text-white hover:brightness-95"

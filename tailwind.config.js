@@ -17,10 +17,6 @@ module.exports = {
         "accent-gold": "var(--accent-gold)",
         "accent-plum": "var(--accent-plum)",
       },
-      fontFamily: {
-        sans: ["var(--font-geist-sans)"],
-        mono: ["var(--font-geist-mono)"],
-      },
     },
   },
   plugins: [],
