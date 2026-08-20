@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { TodaySummary } from "@/app/api/today-summary/route";
+import type { TodaySummary } from "@/pages/api/today-summary";
 
 const REMINDER_MINUTES_BEFORE = 15;
 const CHECK_INTERVAL_MS = 30_000;

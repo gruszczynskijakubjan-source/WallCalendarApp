@@ -12,7 +12,7 @@ import {
   addMinutes,
 } from "date-fns";
 import { pl } from "date-fns/locale";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 import type { EventInitialRange } from "@/components/EventDialog";
 import { useTimeGridSelection } from "@/lib/useTimeGridSelection";
 import { useForecastByDate, forecastKey } from "@/lib/useForecast";

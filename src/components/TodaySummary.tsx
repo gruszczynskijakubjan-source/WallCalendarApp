@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
-import type { TodaySummary as TodaySummaryData } from "@/app/api/today-summary/route";
+import type { TodaySummary as TodaySummaryData } from "@/pages/api/today-summary";
 
 function useTodaySummary() {
   const [data, setData] = useState<TodaySummaryData | null>(null);

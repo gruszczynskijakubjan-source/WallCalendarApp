@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import type { DailyForecast } from "@/app/api/weather/forecast/route";
+import type { DailyForecast } from "@/pages/api/weather/forecast";
 import { getDeviceLocation } from "@/lib/deviceLocation";
 
 /** Fetches the 14-day forecast once and exposes it keyed by yyyy-MM-dd. */

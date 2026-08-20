@@ -15,7 +15,7 @@ import {
   endOfYear,
 } from "date-fns";
 import { pl } from "date-fns/locale";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 
 const WEEKDAY_LABELS = ["P", "W", "Ś", "C", "P", "S", "N"];
 

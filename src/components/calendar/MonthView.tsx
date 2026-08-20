@@ -15,7 +15,7 @@ import {
   addDays,
 } from "date-fns";
 import { pl } from "date-fns/locale";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 import type { EventInitialRange } from "@/components/EventDialog";
 import { weatherIcon } from "@/lib/weatherIcon";
 import { getHolidayForDate } from "@/lib/polishHolidays";

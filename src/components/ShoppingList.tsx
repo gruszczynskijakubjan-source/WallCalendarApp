@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import type { TrelloCard } from "@/app/api/trello/cards/route";
+import type { TrelloCard } from "@/pages/api/trello/cards";
 
 const REFRESH_INTERVAL_MS = 60_000;
 

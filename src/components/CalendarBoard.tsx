@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { addDays, addWeeks, addMonths, addYears, isToday } from "date-fns";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 import EventDialog, { type EventInitialRange } from "@/components/EventDialog";
 import DayView from "@/components/calendar/DayView";
 import WeekView from "@/components/calendar/WeekView";

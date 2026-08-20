@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import type { MergedTask } from "@/app/api/tasks/route";
+import type { MergedTask } from "@/pages/api/tasks";
 
 type Account = {
   id: string;

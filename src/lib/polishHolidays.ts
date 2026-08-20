@@ -1,5 +1,5 @@
 import { addDays, format } from "date-fns";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 
 /** Computes Easter Sunday (Gregorian) for a given year via the Anonymous Gregorian algorithm. */
 function easterSunday(year: number): Date {

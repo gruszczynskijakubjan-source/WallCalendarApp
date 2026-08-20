@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { EweLinkDevice } from "@/app/api/ewelink/devices/route";
+import type { EweLinkDevice } from "@/pages/api/ewelink/devices";
 
 export default function DevicesPanel({
   open,

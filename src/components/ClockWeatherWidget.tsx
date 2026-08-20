@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import type { WeatherResponse } from "@/app/api/weather/route";
+import type { WeatherResponse } from "@/pages/api/weather";
 import { getDeviceLocation } from "@/lib/deviceLocation";
 import { weatherIcon } from "@/lib/weatherIcon";
 import { describeAqi, aqiColor } from "@/lib/airQuality";

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale";
-import type { MergedEvent } from "@/app/api/calendar/events/route";
+import type { MergedEvent } from "@/pages/api/calendar/events";
 import { HOLIDAYS_ACCOUNT_ID } from "@/lib/polishHolidays";
 
 type Account = {
