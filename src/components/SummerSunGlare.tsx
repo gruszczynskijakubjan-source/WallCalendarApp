@@ -24,7 +24,7 @@ export default function SummerSunGlare() {
       {/* Wide, soft rays fanning out from the corner. */}
       <div className="absolute -top-[420px] -right-[420px] h-[840px] w-[840px] animate-[sun-glow_10s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle,_color-mix(in_srgb,_var(--accent-gold)_22%,_transparent)_0%,_transparent_60%)]" />
       {/* The sun itself, tucked into the corner. */}
-      <div className="absolute -top-16 -right-16 h-64 w-64 animate-[sun-glow_9s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle,_color-mix(in_srgb,_var(--accent-gold)_65%,_transparent)_0%,_transparent_70%)]" />
+      <div className="absolute -top-32 -right-32 h-64 w-64 animate-[sun-glow_9s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle,_color-mix(in_srgb,_var(--accent-gold)_65%,_transparent)_0%,_transparent_70%)]" />
       <div className="absolute top-1/4 left-1/3 h-2 w-2 animate-[sun-sparkle_5s_ease-in-out_infinite] rounded-full bg-white/80" />
       <div className="absolute top-1/2 left-2/3 h-1.5 w-1.5 animate-[sun-sparkle_6.5s_ease-in-out_infinite] rounded-full bg-white/70" style={{ animationDelay: "1.5s" }} />
       <div className="absolute top-2/3 left-1/4 h-1 w-1 animate-[sun-sparkle_7.5s_ease-in-out_infinite] rounded-full bg-white/60" style={{ animationDelay: "3s" }} />
