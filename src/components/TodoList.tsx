@@ -11,6 +11,7 @@ type Account = {
 };
 
 const COMPLETED_PAGE_SIZE = 5;
+const REFRESH_INTERVAL_MS = 60_000;
 
 export default function TodoList() {
   const [tasks, setTasks] = useState<MergedTask[]>([]);
@@ -64,6 +65,10 @@ export default function TodoList() {
     void (async () => {
       await load();
     })();
+    // Silent background refresh so tasks added/completed elsewhere show up
+    // on this wall display without anyone needing to touch it.
+    const interval = setInterval(load, REFRESH_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, [load]);
 
   useEffect(() => {

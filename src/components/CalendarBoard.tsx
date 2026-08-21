@@ -22,6 +22,7 @@ import {
   HOLIDAYS_ACCOUNT_COLOR,
 } from "@/lib/polishHolidays";
 import { THEMES, type Theme } from "@/lib/theme";
+import { useFullscreen } from "@/lib/useFullscreen";
 
 type Account = {
   id: string;
@@ -38,6 +39,7 @@ const VIEWS: { id: CalendarView; label: string }[] = [
 ];
 
 const DEFAULT_VIEW: CalendarView = "month";
+const REFRESH_INTERVAL_MS = 60_000;
 
 const TITLE_EMOJI: Partial<Record<Theme, string>> = {
   valentines: "❤️",
@@ -124,6 +126,8 @@ export default function CalendarBoard() {
   const [slideshowOpen, setSlideshowOpen] = useState(false);
   const [devicesOpen, setDevicesOpen] = useState(false);
   const [theme, setTheme] = useState<Theme | null>(null);
+  const { isFullscreen, supported: fullscreenSupported, toggle: toggleFullscreen } =
+    useFullscreen();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -144,34 +148,44 @@ export default function CalendarBoard() {
 
   const isCustom = !isToday(cursorDate) || view !== DEFAULT_VIEW;
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [eventsRes, accountsRes] = await Promise.all([
-        fetch(
-          `/api/calendar/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}`,
-        ),
-        fetch("/api/accounts"),
-      ]);
+  const load = useCallback(
+    async (options?: { silent?: boolean }) => {
+      if (!options?.silent) setLoading(true);
+      setError(null);
+      try {
+        const [eventsRes, accountsRes] = await Promise.all([
+          fetch(
+            `/api/calendar/events?timeMin=${start.toISOString()}&timeMax=${end.toISOString()}`,
+          ),
+          fetch("/api/accounts"),
+        ]);
 
-      if (!eventsRes.ok) throw new Error("Nie udało się pobrać wydarzeń");
-      const eventsData = await eventsRes.json();
-      const accountsData = await accountsRes.json();
+        if (!eventsRes.ok) throw new Error("Nie udało się pobrać wydarzeń");
+        const eventsData = await eventsRes.json();
+        const accountsData = await accountsRes.json();
 
-      setEvents([...eventsData.events, ...getHolidayEventsInRange(start, end)]);
-      setAccounts(accountsData);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Wystąpił błąd");
-    } finally {
-      setLoading(false);
-    }
-  }, [start, end]);
+        setEvents([...eventsData.events, ...getHolidayEventsInRange(start, end)]);
+        setAccounts(accountsData);
+      } catch (e) {
+        // A silent background refresh failing shouldn't surface an error
+        // banner over an otherwise-working view — only the initial load does.
+        if (!options?.silent) setError(e instanceof Error ? e.message : "Wystąpił błąd");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [start, end],
+  );
 
   useEffect(() => {
     void (async () => {
       await load();
     })();
+    // Silent background refresh so events created/changed elsewhere (phone,
+    // another household member) show up on this wall display without
+    // anyone needing to touch it.
+    const interval = setInterval(() => load({ silent: true }), REFRESH_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, [load]);
 
   function goToday() {
@@ -397,6 +411,9 @@ export default function CalendarBoard() {
         onOpenSlideshow={() => setSlideshowOpen(true)}
         onOpenTimer={() => setTimerOpen(true)}
         onOpenDevices={() => setDevicesOpen(true)}
+        isFullscreen={isFullscreen}
+        fullscreenSupported={fullscreenSupported}
+        onToggleFullscreen={toggleFullscreen}
       />
 
       <KitchenTimer open={timerOpen} onClose={() => setTimerOpen(false)} />

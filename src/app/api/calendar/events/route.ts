@@ -60,7 +60,11 @@ export async function GET(request: Request) {
             id: `${account.id}:${event.id}`,
             accountId: account.id,
             ownerName: account.user.name,
-            ownerImage: account.user.customImage ?? account.user.image,
+            // See src/app/api/accounts/route.ts for why this isn't the raw
+            // base64 data URL: it would be duplicated per event otherwise.
+            ownerImage: account.user.customImage
+              ? `/api/accounts/${account.id}/photo-file`
+              : account.user.image,
             ownerColor: overrideColor ?? calendarColor,
             summary: event.summary ?? "(bez tytułu)",
             description: event.description,

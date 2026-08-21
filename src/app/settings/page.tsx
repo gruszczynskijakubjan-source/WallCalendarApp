@@ -35,10 +35,10 @@ export default async function SettingsPage() {
               key={a.id}
               className="flex items-center gap-3 rounded-xl border border-border p-3"
             >
-              {(a.user.customImage ?? a.user.image) && (
+              {(a.user.customImage ? `/api/accounts/${a.id}/photo-file` : a.user.image) && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={a.user.customImage ?? a.user.image ?? undefined}
+                  src={a.user.customImage ? `/api/accounts/${a.id}/photo-file` : (a.user.image ?? undefined)}
                   alt=""
                   className="h-10 w-10 rounded-full object-cover"
                 />

@@ -42,7 +42,7 @@ export default function DayView({
   const allDayEvents = dayEvents.filter((e) => e.allDay);
   const timedEvents = dayEvents.filter((e) => !e.allDay);
 
-  const { selection, startSelection, extendSelection, endSelection, cancelSelection } =
+  const { selection, armed, startSelection, extendSelection, endSelection, cancelSelection } =
     useTimeGridSelection((sel) => {
       const minSlot = Math.min(sel.startSlot, sel.endSlot);
       const maxSlot = Math.max(sel.startSlot, sel.endSlot) + 1;
@@ -57,8 +57,10 @@ export default function DayView({
   useEffect(() => {
     const target = showsToday ? now : new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8);
     const offsetMinutes = target.getHours() * 60 + target.getMinutes();
-    scrollRef.current?.scrollTo({
-      top: (offsetMinutes / 60) * HOUR_HEIGHT_PX - HOUR_HEIGHT_PX * 2,
+    const container = scrollRef.current;
+    const viewportHeight = container?.clientHeight ?? HOUR_HEIGHT_PX * 4;
+    container?.scrollTo({
+      top: (offsetMinutes / 60) * HOUR_HEIGHT_PX - viewportHeight / 2,
       behavior: "instant",
     });
     // Only re-scroll when the displayed day changes, not on every clock tick.
@@ -131,13 +133,12 @@ export default function DayView({
           </div>
 
           <div
-            className="relative flex-1 touch-none select-none"
+            className={`relative flex-1 select-none ${armed ? "touch-none" : ""}`}
             onPointerDown={(e) => {
               if ((e.target as HTMLElement).closest("button")) return;
               const rect = e.currentTarget.getBoundingClientRect();
               const slot = Math.floor((e.clientY - rect.top) / SLOT_HEIGHT_PX);
-              startSelection(0, slot);
-              e.currentTarget.setPointerCapture(e.pointerId);
+              startSelection(0, slot, { x: e.clientX, y: e.clientY });
             }}
             onPointerMove={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
@@ -145,7 +146,7 @@ export default function DayView({
                 TOTAL_SLOTS - 1,
                 Math.max(0, Math.floor((e.clientY - rect.top) / SLOT_HEIGHT_PX)),
               );
-              extendSelection(0, slot);
+              extendSelection(0, slot, { x: e.clientX, y: e.clientY });
             }}
             onPointerUp={endSelection}
             onPointerCancel={cancelSelection}

@@ -51,7 +51,11 @@ export async function GET(request: Request) {
             accountId: account.id,
             taskListId,
             ownerName: account.user.name,
-            ownerImage: account.user.customImage ?? account.user.image,
+            // See src/app/api/accounts/route.ts for why this isn't the raw
+            // base64 data URL: it would be duplicated per task otherwise.
+            ownerImage: account.user.customImage
+              ? `/api/accounts/${account.id}/photo-file`
+              : account.user.image,
             title: task.title ?? "(bez tytułu)",
             done: task.status === "completed",
             updatedAt: task.updated ?? new Date(0).toISOString(),
