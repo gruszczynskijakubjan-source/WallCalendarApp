@@ -8,37 +8,6 @@ export type WeatherResponse = {
   europeanAqi: number | null;
 };
 
-// WMO weather codes -> short Polish description, used for the tooltip/aria-label.
-const WEATHER_DESCRIPTIONS: Record<number, string> = {
-  0: "Bezchmurnie",
-  1: "Przeważnie bezchmurnie",
-  2: "Częściowe zachmurzenie",
-  3: "Zachmurzenie",
-  45: "Mgła",
-  48: "Mgła szadzi",
-  51: "Mżawka słaba",
-  53: "Mżawka",
-  55: "Mżawka gęsta",
-  61: "Słaby deszcz",
-  63: "Deszcz",
-  65: "Silny deszcz",
-  71: "Słaby śnieg",
-  73: "Śnieg",
-  75: "Silny śnieg",
-  80: "Przelotny deszcz",
-  81: "Przelotny deszcz",
-  82: "Silny przelotny deszcz",
-  85: "Przelotny śnieg",
-  86: "Silny przelotny śnieg",
-  95: "Burza",
-  96: "Burza z gradem",
-  99: "Silna burza z gradem",
-};
-
-export function describeWeatherCode(code: number) {
-  return WEATHER_DESCRIPTIONS[code] ?? "Pogoda";
-}
-
 // GET /api/weather?lat=..&lon=..&label=..
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
