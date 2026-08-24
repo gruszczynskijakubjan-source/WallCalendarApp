@@ -21,6 +21,10 @@ function slotToDate(date: Date, slot: number) {
   return addMinutes(base, slot * SLOT_MINUTES);
 }
 
+function minutesOfDay(d: Date) {
+  return d.getHours() * 60 + d.getMinutes();
+}
+
 export default function DayView({
   date,
   events,
@@ -35,12 +39,27 @@ export default function DayView({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [now, setNow] = useState(() => new Date());
   const showsToday = isToday(date);
+  // The vertical slice of the time grid (in minutes-from-midnight) currently
+  // scrolled into view, so events entirely above/below it can be pinned to
+  // the top/bottom of the view instead of scrolling off-screen invisibly.
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 24 * 60 });
 
   const dayEvents = events.filter(
     (e) => e.start && isSameDay(parseISO(e.start), date),
   );
   const allDayEvents = dayEvents.filter((e) => e.allDay);
   const timedEvents = dayEvents.filter((e) => !e.allDay);
+  const visibleTimedEvents = timedEvents.filter(
+    (e) =>
+      minutesOfDay(parseISO(e.start!)) >= visibleRange.start &&
+      minutesOfDay(parseISO(e.start!)) < visibleRange.end,
+  );
+  const beforeRangeEvents = timedEvents.filter(
+    (e) => minutesOfDay(parseISO(e.start!)) < visibleRange.start,
+  );
+  const afterRangeEvents = timedEvents.filter(
+    (e) => minutesOfDay(parseISO(e.start!)) >= visibleRange.end,
+  );
 
   const { selection, armed, startSelection, extendSelection, endSelection, cancelSelection } =
     useTimeGridSelection((sel) => {
@@ -52,6 +71,26 @@ export default function DayView({
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    function updateVisibleRange() {
+      if (!container) return;
+      const startMinutes = (container.scrollTop / HOUR_HEIGHT_PX) * 60;
+      const endMinutes = ((container.scrollTop + container.clientHeight) / HOUR_HEIGHT_PX) * 60;
+      setVisibleRange({ start: startMinutes, end: endMinutes });
+    }
+
+    updateVisibleRange();
+    container.addEventListener("scroll", updateVisibleRange);
+    window.addEventListener("resize", updateVisibleRange);
+    return () => {
+      container.removeEventListener("scroll", updateVisibleRange);
+      window.removeEventListener("resize", updateVisibleRange);
+    };
   }, []);
 
   useEffect(() => {
@@ -88,7 +127,7 @@ export default function DayView({
         )}
       </div>
 
-      {allDayEvents.length > 0 && (
+      {(allDayEvents.length > 0 || beforeRangeEvents.length > 0) && (
         <ul className="mb-2 flex shrink-0 flex-col gap-1">
           {allDayEvents.map((event) => (
             <li key={event.id}>
@@ -110,8 +149,35 @@ export default function DayView({
                     style={{ background: event.ownerColor }}
                   />
                 )}
-                <span className="flex-1 font-medium">{event.summary}</span>
+                <span className="min-w-0 flex-1 font-medium wrap-break-word">{event.summary}</span>
                 <span className="text-sm text-foreground/50">Cały dzień</span>
+              </button>
+            </li>
+          ))}
+          {beforeRangeEvents.map((event) => (
+            <li key={event.id}>
+              <button
+                onClick={() => onSelectEvent(event)}
+                className="flex w-full items-center gap-3 rounded-xl bg-surface-muted p-3 text-left opacity-80 hover:bg-surface-muted"
+              >
+                {event.ownerImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={event.ownerImage}
+                    alt=""
+                    className="h-6 w-6 shrink-0 rounded-full object-cover ring-2"
+                    style={{ boxShadow: `0 0 0 2px ${event.ownerColor}` }}
+                  />
+                ) : (
+                  <span
+                    className="h-3 w-3 shrink-0 rounded-full"
+                    style={{ background: event.ownerColor }}
+                  />
+                )}
+                <span className="min-w-0 flex-1 font-medium wrap-break-word">↑ {event.summary}</span>
+                <span className="text-sm text-foreground/50">
+                  {format(parseISO(event.start!), "HH:mm")}
+                </span>
               </button>
             </li>
           ))}
@@ -157,7 +223,7 @@ export default function DayView({
                 className="border-t border-border first:border-t-0"
                 style={{ height: HOUR_HEIGHT_PX }}
               >
-                {timedEvents
+                {visibleTimedEvents
                   .filter((e) => e.start && parseISO(e.start).getHours() === hour)
                   .map((event) => (
                     <button
@@ -180,7 +246,7 @@ export default function DayView({
                           style={{ background: event.ownerColor }}
                         />
                       )}
-                      <span className="flex-1">
+                      <span className="min-w-0 flex-1 truncate">
                         <span className="font-medium">{event.summary}</span>
                         <span className="ml-2 text-foreground/50">
                           {format(parseISO(event.start!), "HH:mm")}
@@ -214,6 +280,38 @@ export default function DayView({
           </div>
         </div>
       </div>
+
+      {afterRangeEvents.length > 0 && (
+        <ul className="mt-2 flex shrink-0 flex-col gap-1">
+          {afterRangeEvents.map((event) => (
+            <li key={event.id}>
+              <button
+                onClick={() => onSelectEvent(event)}
+                className="flex w-full items-center gap-3 rounded-xl bg-surface-muted p-3 text-left opacity-80 hover:bg-surface-muted"
+              >
+                {event.ownerImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={event.ownerImage}
+                    alt=""
+                    className="h-6 w-6 shrink-0 rounded-full object-cover ring-2"
+                    style={{ boxShadow: `0 0 0 2px ${event.ownerColor}` }}
+                  />
+                ) : (
+                  <span
+                    className="h-3 w-3 shrink-0 rounded-full"
+                    style={{ background: event.ownerColor }}
+                  />
+                )}
+                <span className="min-w-0 flex-1 font-medium wrap-break-word">↓ {event.summary}</span>
+                <span className="text-sm text-foreground/50">
+                  {format(parseISO(event.start!), "HH:mm")}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {dayEvents.length === 0 && (
         <p className="p-4 text-center text-foreground/40">Brak wydarzeń tego dnia.</p>

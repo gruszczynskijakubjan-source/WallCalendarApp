@@ -30,6 +30,10 @@ function slotToDate(day: Date, slot: number) {
   return addMinutes(base, slot * SLOT_MINUTES);
 }
 
+function minutesOfDay(d: Date) {
+  return d.getHours() * 60 + d.getMinutes();
+}
+
 export default function WeekView({
   date,
   events,
@@ -45,6 +49,17 @@ export default function WeekView({
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [now, setNow] = useState(() => new Date());
+  // The scrollable time grid's vertical scrollbar eats into its width, but
+  // the day-header and all-day-event rows above it never scroll and so never
+  // lose that width — without compensating, their columns drift out of
+  // alignment with the grid columns below. Measured once the grid mounts,
+  // since scrollbar width varies by OS/browser (and is 0 on iOS/overlay
+  // scrollbars, where no compensation is needed).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
+  // The vertical slice of the time grid (in minutes-from-midnight) currently
+  // scrolled into view, so events entirely above/below it can be pinned to
+  // the top/bottom of their column instead of scrolling off-screen invisibly.
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 24 * 60 });
 
   const weekStart = startOfWeek(date, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: weekStart, end: addDays(weekStart, 6) });
@@ -60,6 +75,36 @@ export default function WeekView({
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60_000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    function measure() {
+      const el = scrollRef.current;
+      if (el) setScrollbarWidth(el.offsetWidth - el.clientWidth);
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    function updateVisibleRange() {
+      if (!container) return;
+      const startMinutes = (container.scrollTop / HOUR_HEIGHT_PX) * 60;
+      const endMinutes = ((container.scrollTop + container.clientHeight) / HOUR_HEIGHT_PX) * 60;
+      setVisibleRange({ start: startMinutes, end: endMinutes });
+    }
+
+    updateVisibleRange();
+    container.addEventListener("scroll", updateVisibleRange);
+    window.addEventListener("resize", updateVisibleRange);
+    return () => {
+      container.removeEventListener("scroll", updateVisibleRange);
+      window.removeEventListener("resize", updateVisibleRange);
+    };
   }, []);
 
   useEffect(() => {
@@ -80,7 +125,10 @@ export default function WeekView({
 
   return (
     <div className="flex h-full min-h-0 flex-col overflow-hidden">
-      <div className="mb-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px">
+      <div
+        className="mb-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px"
+        style={{ paddingRight: scrollbarWidth }}
+      >
         <div />
         {days.map((day) => {
           const dayForecast = forecast[forecastKey(day)];
@@ -111,14 +159,33 @@ export default function WeekView({
         })}
       </div>
 
-      {days.some((day) =>
+      {(days.some((day) =>
         events.some((e) => e.allDay && e.start && isSameDay(parseISO(e.start), day)),
-      ) && (
-        <div className="mb-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px">
+      ) ||
+        days.some((day) =>
+          events.some(
+            (e) =>
+              !e.allDay &&
+              e.start &&
+              isSameDay(parseISO(e.start), day) &&
+              minutesOfDay(parseISO(e.start)) < visibleRange.start,
+          ),
+        )) && (
+        <div
+          className="mb-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px"
+          style={{ paddingRight: scrollbarWidth }}
+        >
           <div />
           {days.map((day) => {
             const allDayEvents = events.filter(
               (e) => e.allDay && e.start && isSameDay(parseISO(e.start), day),
+            );
+            const beforeRangeEvents = events.filter(
+              (e) =>
+                !e.allDay &&
+                e.start &&
+                isSameDay(parseISO(e.start), day) &&
+                minutesOfDay(parseISO(e.start)) < visibleRange.start,
             );
             return (
               <div key={day.toISOString()} className="flex min-w-0 flex-col gap-1 px-1">
@@ -138,7 +205,26 @@ export default function WeekView({
                         className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-white/60"
                       />
                     )}
-                    <span className="truncate">{event.summary}</span>
+                    <span className="min-w-0 flex-1 truncate">{event.summary}</span>
+                  </button>
+                ))}
+                {beforeRangeEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    onClick={() => onSelectEvent(event)}
+                    title={`${event.summary} — ${format(parseISO(event.start!), "HH:mm")}`}
+                    className="flex min-w-0 items-center gap-1.5 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white opacity-80 hover:brightness-95"
+                    style={{ background: event.ownerColor }}
+                  >
+                    {event.ownerImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={event.ownerImage}
+                        alt=""
+                        className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-white/60"
+                      />
+                    )}
+                    <span className="min-w-0 flex-1 truncate">↑ {event.summary}</span>
                   </button>
                 ))}
               </div>
@@ -163,7 +249,12 @@ export default function WeekView({
 
           {days.map((day, dayIndex) => {
             const dayEvents = events.filter(
-              (e) => !e.allDay && e.start && isSameDay(parseISO(e.start), day),
+              (e) =>
+                !e.allDay &&
+                e.start &&
+                isSameDay(parseISO(e.start), day) &&
+                minutesOfDay(parseISO(e.start)) >= visibleRange.start &&
+                minutesOfDay(parseISO(e.start)) < visibleRange.end,
             );
             const daySelection =
               selection && selection.columnIndex === dayIndex ? selection : null;
@@ -191,7 +282,7 @@ export default function WeekView({
                 {HOURS.map((hour) => (
                   <div
                     key={hour}
-                    className="border-t border-border first:border-t-0"
+                    className="overflow-hidden border-t border-border first:border-t-0"
                     style={{ height: HOUR_HEIGHT_PX }}
                   >
                     {dayEvents
@@ -200,7 +291,7 @@ export default function WeekView({
                         <button
                           key={event.id}
                           onClick={() => onSelectEvent(event)}
-                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] items-center gap-1 truncate rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
+                          className="mx-0.5 mb-0.5 flex w-[calc(100%-0.25rem)] max-w-full min-w-0 items-center gap-1 overflow-hidden rounded px-1 py-0.5 text-left text-[11px] leading-tight text-white hover:brightness-95"
                           style={{ background: event.ownerColor }}
                           title={event.summary}
                         >
@@ -212,7 +303,9 @@ export default function WeekView({
                               className="h-3 w-3 shrink-0 rounded-full object-cover ring-1 ring-white/60"
                             />
                           )}
-                          <span className="truncate">{event.summary}</span>
+                          <span className="block min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                            {event.summary}
+                          </span>
                         </button>
                       ))}
                   </div>
@@ -243,6 +336,56 @@ export default function WeekView({
           })}
         </div>
       </div>
+
+      {days.some((day) =>
+        events.some(
+          (e) =>
+            !e.allDay &&
+            e.start &&
+            isSameDay(parseISO(e.start), day) &&
+            minutesOfDay(parseISO(e.start)) >= visibleRange.end,
+        ),
+      ) && (
+        <div
+          className="mt-2 grid shrink-0 grid-cols-[3rem_repeat(7,1fr)] gap-px"
+          style={{ paddingRight: scrollbarWidth }}
+        >
+          <div />
+          {days.map((day) => {
+            const afterRangeEvents = events.filter(
+              (e) =>
+                !e.allDay &&
+                e.start &&
+                isSameDay(parseISO(e.start), day) &&
+                minutesOfDay(parseISO(e.start)) >= visibleRange.end,
+            );
+            return (
+              <div key={day.toISOString()} className="flex min-w-0 flex-col gap-1 px-1">
+                {afterRangeEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    onClick={() => onSelectEvent(event)}
+                    title={`${event.summary} — ${format(parseISO(event.start!), "HH:mm")}`}
+                    className="flex min-w-0 items-center gap-1.5 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium leading-tight text-white opacity-80 hover:brightness-95"
+                    style={{ background: event.ownerColor }}
+                  >
+                    {event.ownerImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={event.ownerImage}
+                        alt=""
+                        className="h-4 w-4 shrink-0 rounded-full object-cover ring-1 ring-white/60"
+                      />
+                    )}
+                    <span className="min-w-0 flex-1 truncate">↓ {event.summary}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

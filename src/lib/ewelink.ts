@@ -32,7 +32,11 @@ export function getEweLinkAuthorizeUrl(redirectUri: string, state: string) {
     seq,
     redirectUrl: redirectUri,
     state,
-    nonce: crypto.randomBytes(8).toString("hex"),
+    // eWeLink's hosted login page requires nonce to be exactly 8 characters —
+    // a longer value causes its client-side param validation to fail silently
+    // and fall back to a broken default API host (apia.coolkit.cn), which then
+    // gets blocked by CORS instead of resolving to the account's real region.
+    nonce: crypto.randomBytes(4).toString("hex"),
     grantType: "authorization_code",
   });
 
