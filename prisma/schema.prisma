@@ -1,5 +1,9 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  // No Rust query-engine binary in the generated Client — required to run
+  // on Termux/Android, where Prisma's prebuilt engines (built for glibc/musl)
+  // are ABI-incompatible with Android's Bionic libc.
+  engineType = "client"
 }
 
 datasource db {
