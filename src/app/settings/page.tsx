@@ -1,5 +1,6 @@
 import { auth, signIn, signOut } from "@/auth";
 import { getLinkedGoogleAccounts } from "@/lib/google";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import WeatherLocationSettingsLoader from "@/components/WeatherLocationSettingsLoader";
 import AccountPhotoUpload from "@/components/AccountPhotoUpload";
@@ -8,6 +9,12 @@ import PhotoManager from "@/components/PhotoManager";
 import NotificationSettingsLoader from "@/components/NotificationSettingsLoader";
 import TrelloSettings from "@/components/TrelloSettings";
 import EweLinkSettings from "@/components/EweLinkSettings";
+
+async function deleteAccount(accountId: string) {
+  "use server";
+  await prisma.account.delete({ where: { id: accountId } });
+  await signOut({ redirectTo: "/settings" });
+}
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -51,6 +58,15 @@ export default async function SettingsPage() {
                 accountId={a.id}
                 hasCustomImage={Boolean(a.user.customImage)}
               />
+              <form action={deleteAccount.bind(null, a.id)}>
+                <button
+                  type="submit"
+                  className="text-sm text-red-400 hover:text-red-600 underline"
+                  title="Usuń konto i wyloguj"
+                >
+                  Usuń
+                </button>
+              </form>
             </li>
           ))}
           {linkedAccounts.length === 0 && (
